@@ -32,7 +32,6 @@ export const authOptions: AuthOptions = {
         senha: { label: "Senha", type: "password" },
       },
       async authorize(credentials) {
-        console.log("credentials", credentials);
         if (!credentials || !credentials?.email || !credentials?.senha || !validaEmail(credentials?.email)) return null;
 
         const contaRepository = new ContaRepository();
@@ -50,15 +49,12 @@ export const authOptions: AuthOptions = {
   },
   callbacks: {
     async jwt({ token, user }) {
-      console.log("jwt", token, user);
       if (user) {
         token.id = (user as User).id;
       }
       return token;
     },
     async session({ session, token }) {
-      console.log("session", session, token);
-
       if (token?.id) {
         session.user.id = token.id;
       }

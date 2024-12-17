@@ -29,16 +29,16 @@ export default function Footer() {
             Desenvolvido por Alura
           </p>
 
-          <Image className="mb-3 mt-3" src="/logo-bytebank.svg" alt="Bytebank" />
+          <Image className="mb-3 mt-3" src="/logo-bytebank.svg" alt="Bytebank" width="146" height="32" />
           <div className="flex space-x-4 items-center">
             <a href="#">
-              <Image src="/logo-insta.svg" alt="Instagram" />
+              <Image src="/logo-insta.svg" alt="Instagram" width="30" height="30" />
             </a>
             <a href="#">
-              <Image src="/logo-whatsapp.svg" alt="WhatsApp" />
+              <Image src="/logo-whatsapp.svg" alt="WhatsApp" width="30" height="30" />
             </a>
             <a href="#">
-              <Image src="/logo-youtube.svg" alt="YouTube" />
+              <Image src="/logo-youtube.svg" alt="YouTube" width="30" height="30" />
             </a>
           </div>
         </div>
