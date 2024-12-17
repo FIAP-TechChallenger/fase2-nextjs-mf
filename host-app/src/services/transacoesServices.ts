@@ -7,10 +7,8 @@ interface Transacao {
   date: string;
 }
 
-const API_URL = "http://localhost:3000/api"; 
-
 export const getSaldo = async (userId: number) => {
-  const response = await fetch(`${API_URL}/saldo?userId=${userId}`);
+  const response = await fetch(`api/saldo?userId=${userId}`);
   if (!response.ok) {
     throw new Error("Erro ao buscar saldo");
   }
@@ -19,7 +17,7 @@ export const getSaldo = async (userId: number) => {
   return saldo;
 };
 export const postSaldo = async (userId: number, newBalance: number) => {
-  const response = await fetch(`${API_URL}/saldo`, {
+  const response = await fetch(`api/saldo`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -34,7 +32,7 @@ export const postSaldo = async (userId: number, newBalance: number) => {
 };
 
 export const getTransacoes = async (userId: number) => {
-  const response = await fetch(`${API_URL}/transacoes?userId=${userId}`);
+  const response = await fetch(`api/transacoes?userId=${userId}`);
   if (!response.ok) {
     throw new Error("Erro ao buscar transações");
   }
@@ -43,7 +41,7 @@ export const getTransacoes = async (userId: number) => {
 };
 
 export const getTransacao = async (id: number): Promise<BDTransacao> => {
-  const response = await fetch(`${API_URL}/transacoes/${id}`);
+  const response = await fetch(`api/transacoes/${id}`);
   if (!response.ok) {
     throw new Error("Erro ao buscar transação");
   }
@@ -56,7 +54,7 @@ export const postTransacao = async (transacao: Transacao) => {
   const dataObjeto = new Date(date);
   const valorNumerico = Number(valor);
 
-  const response = await fetch(`${API_URL}/transacoes`, {
+  const response = await fetch(`api/transacoes`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

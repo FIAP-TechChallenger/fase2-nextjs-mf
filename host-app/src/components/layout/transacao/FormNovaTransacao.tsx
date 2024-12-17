@@ -29,7 +29,7 @@ export default function FormNovaTransacao({ deposito, transferencia, novaTransac
     e.preventDefault();
 
     if (!isFormValid()) {
-      alert("Dados inválidos! is valid form nova transação");
+      alert("Dados inválidos! Verifique os campos.");
       return;
     }
 
@@ -68,19 +68,15 @@ export default function FormNovaTransacao({ deposito, transferencia, novaTransac
     const { tipoTransacao, valor, date } = formData;
 
     if (!tipoTransacao || tipoTransacao.trim() === "") {
-      console.log("Falha na validação: Tipo de transação inválido.");
       return false;
     }
     if (valor <= 0 || isNaN(valor)) {
-      console.log("Falha na validação: Valor inválido.");
       return false;
     }
     if (!date || isNaN(new Date(date).getTime())) {
-      console.log("Falha na validação: Data inválida.");
       return false;
     }
 
-    console.log("Formulário é válido.");
     return true;
   };
 

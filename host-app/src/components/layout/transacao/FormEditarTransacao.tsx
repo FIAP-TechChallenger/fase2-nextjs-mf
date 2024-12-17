@@ -55,19 +55,15 @@ export default function FormEditarTransacao(options: FormEditarTransacaoProps) {
     const { tipoTransacao, valor, date } = formData;
 
     if (!tipoTransacao || tipoTransacao.trim() === "") {
-      console.log("Falha na validação: Tipo de transação inválido.");
       return false;
     }
     if (valor <= 0 || isNaN(valor)) {
-      console.log("Falha na validação: Valor inválido.");
       return false;
     }
     if (!date || isNaN(new Date(date).getTime())) {
-      console.log("Falha na validação: Data inválida.");
       return false;
     }
 
-    console.log("Formulário é válido.");
     return true;
   };
 

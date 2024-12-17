@@ -1,19 +1,11 @@
 import ListaTransacoes from "./ListaTransacoes";
 import IconButton from "@/components/ui/IconButton";
 import { useRouter } from "next/navigation";
-import { Transacao } from "@/context/TransacoesContext";
 import { useFiltrosTransacoesContext } from "@/context/FiltroTransacoesContext";
 
-interface ExtratoProps {
-  transacoesIniciais: Transacao[];
-}
-
-export default function Extrato({ transacoesIniciais }: ExtratoProps) {
+export default function Extrato() {
   const router = useRouter();
   const { transacoesFiltradas } = useFiltrosTransacoesContext();
-
-  const transacoesExibidas =
-    transacoesFiltradas?.length > 0 ? transacoesFiltradas.slice(-5).reverse() : transacoesIniciais;
 
   function onEditClicked() {
     router.push("/transferencias");
@@ -26,7 +18,7 @@ export default function Extrato({ transacoesIniciais }: ExtratoProps) {
         <IconButton icon="edit" color="blue" onClick={onEditClicked} />
       </div>
 
-      <ListaTransacoes transacoes={transacoesExibidas} showActions={false} />
+      <ListaTransacoes transacoes={transacoesFiltradas?.slice(-5)?.reverse()} showActions={false} />
     </div>
   );
 }
