@@ -1,46 +1,195 @@
-# Support For Next.js is ending
+# Projeto Microfrontend com Module Federation e Docker
 
-https://github.com/module-federation/core/issues/3153
+Aplicativo Host Next.js
+Aplicativo Remoto Angular
+Banco de Dados Postgres
 
-# Module Federation with NextJS and Client Side React.
+## Estrutura do Projeto
 
-Module federation in NextJS depends on [@module-federation/nextjs-mf](https://www.npmjs.com/package/@module-federation/nextjs-mf).
+- **apps/host-app**: Contém o aplicativo host.
+- **apps/investimentos**: Contém o aplicativo remoto para os investimentos.
+- **libs/db**: Contém os esquemas e a configuração do Prisma.
+- **Docker**: Contém os arquivos de configuração do Docker Compose.
 
-## Context
+---
 
-There are 2 applications:
+## Passo a Passo de Inicialização
 
-- `host-app`: Next.js app
-- `remote-app`: flavor of `React + Webpack 5`
+### 1. Instalar dependências
 
-### The `remote-app`
+Antes de qualquer coisa, instale as dependências necessárias para o projeto.
 
-- Within this application, we are exposing a `Button` component that utilizes a CSS-in-JS design solution.
-- If you'll notice the `shared` config, you can see that the version of `react` and `react-dom` have been set to `0`.
-- When consuming the remote app within a Next.js environment, we need to make sure that webpack always selects the host's copy of these modules.
-- By combining the `version: '0'` syntax with `singleton: true` we can guarantee that this will be the case.
+#### Na raiz do repositório:
 
-> NOTE: If `version: '0'` is omitted, you'll encounter an issue where a copy of react will be downloaded from the remoteEntry.
+```bash
+npm install
+```
 
-> NOTE: Another issue you may run into is an invalid hook call if you are federating a component that uses react hooks. This is directly related to multiple copies of react running at the same time. The above resolves this.
+#### No aplicativo host (apps/host-app):
 
-### The `host-app`
+Entre na pasta do aplicativo host e instale as dependências locais:
 
-Within this application, we've configured the `remotes` object inside of the `NextFederationPlugin`.
+```bash
+cd apps/host-app
+npm install
+```
 
-## Setup
+#### No aplicativo Investimentos (apps/investimentos):
 
-- run `yarn` - Install all the dependencies to run the apps in parallel.
-- run `npm run install:apps` - Install all the required dependencies on both `host-app` and `remote-app`
-- run `npm run start` - Start both `host-app` and `remote-app`
-- `host-app` on `localhost:3000`
-- `remote-app` on `localhost:3001`
-- Navigate to `localhost:3000` - Two Button Component should be visible, one from remote and another from host app.
+Entre na pasta do aplicativo host e instale as dependências locais:
 
-# Running Cypress E2E Tests
+```bash
+cd apps/investimentos
+npm install
+```
 
-To run tests in interactive mode, run `npm run cypress:debug` from the root directory of the project. It will open Cypress Test Runner and allow to run tests in interactive mode. [More info about "How to run tests"](../../cypress/README.md#how-to-run-tests)
+---
 
-To build app and run test in headless mode, run `yarn e2e:ci`. It will build app and run tests for this workspace in headless mode. If tets failed cypress will create `cypress` directory in sample root folder with screenshots and videos.
+### 2. Iniciar o Banco de Dados com Docker Compose
 
-["Best Practices, Rules amd more interesting information here](../../cypress/README.md)
+O banco de dados é gerenciado via Docker Compose. Certifique-se de que o Docker esteja instalado e em execução no seu sistema.
+
+#### Suba os containers do Docker:
+
+Na pasta **Docker**:
+
+```bash
+cd Docker
+docker-compose up -d
+```
+
+Isso iniciará os serviços definidos no `docker-compose.yml` (incluindo o banco de dados).
+
+#### Verifique os containers em execução:
+
+```bash
+docker ps
+```
+
+---
+
+### 3. Configurar e Inicializar o Prisma
+
+#### Navegue até a pasta do Prisma:
+
+```bash
+cd libs/db
+```
+
+#### 3.1 Gerar os arquivos do Prisma:
+
+Certifique-se de que as migrações e o cliente Prisma estejam configurados corretamente.
+
+```bash
+npx prisma generate
+```
+
+#### 3.2 Aplicar as migrações no banco de dados:
+
+```bash
+npx prisma migrate dev
+```
+
+Se o banco de dados estiver configurado corretamente, as migrações serão aplicadas.
+
+#### 3.3 Verificar o banco de dados:
+
+Para abrir o Prisma Studio e visualizar os dados:
+
+```bash
+npx prisma studio
+```
+
+---
+
+### 4. Iniciar o Aplicativo Host
+
+Depois de configurar o ambiente, inicie o aplicativo host:
+
+#### Navegue até a pasta do host-app:
+
+```bash
+cd apps/host-app
+```
+
+#### Inicie o servidor de desenvolvimento:
+
+```bash
+npm run dev
+```
+
+O servidor de desenvolvimento do Next.js será iniciado, e o aplicativo estará disponível em [http://localhost:3000](http://localhost:3000).
+
+---
+
+### 5. Iniciar o Aplicativo Remoto Investimentos
+
+Depois de configurar o ambiente, inicie o aplicativo remoto dos investimentos:
+
+#### Navegue até a pasta do investimentos:
+
+```bash
+cd apps/investimentos
+```
+
+#### Inicie o servidor de desenvolvimento:
+
+```bash
+npm run dev
+```
+
+O servidor de desenvolvimento do Angular será iniciado, e o aplicativo estará disponível em [http://localhost:3001](http://localhost:3001).
+
+---
+
+## Scripts Importantes
+
+- **Instalar dependências na raiz**:
+
+  ```bash
+  npm install
+  ```
+
+- **Iniciar containers do Docker**:
+
+  ```bash
+  docker-compose up -d
+  ```
+
+- **Gerar cliente do Prisma**:
+
+  ```bash
+  npx prisma generate
+  ```
+
+- **Aplicar migrações do Prisma**:
+
+  ```bash
+  npx prisma migrate dev
+  ```
+
+- **Abrir Prisma Studio**:
+
+  ```bash
+  npx prisma studio
+  ```
+
+- **Iniciar o servidor do host-app**:
+
+  ```bash
+  npm run dev
+  ```
+
+- **Iniciar o servidor do investimentos**:
+  ```bash
+  npm run start
+  ```
+
+---
+
+## Observações
+
+- Certifique-se de que o Docker está configurado corretamente e que os containers foram iniciados antes de rodar o Prisma ou o aplicativo.
+- Sempre instale as dependências na raiz antes de instalar dependências em subprojetos.
+
+Se encontrar algum problema, confira os logs do Docker ou do Prisma para diagnóstico.
