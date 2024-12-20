@@ -3,7 +3,8 @@
 import {  useTransacoesContext } from "@/context/TransacoesContext";
 import { FormEditarTransacaoProps } from "../../../shared/models/Formulario";
 import Input from "@/components/forms/Input";
-import InputSelect, { InputSelectOption } from "@/components/forms/InputSelect";
+import InputSelect from "@/components/forms/InputSelect";
+import { InputSelectOption  } from '../../../shared/models/Input'
 import Button from "@/components/ui/Button";
 import { useState } from "react";
 

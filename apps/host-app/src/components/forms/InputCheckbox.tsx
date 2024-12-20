@@ -2,21 +2,7 @@
 
 import { ChangeEvent } from "react";
 import InputLabel from "./InputLabel";
-
-export interface InputCheckboxOptions {
-  /** Identificador */
-  name: string;
-  /** Texto do label */
-  label: string;
-  /** Valor do input */
-  value?: boolean;
-  /** Erro */
-  error?: string;
-  /** Classes css */
-  className?: string;
-  /** Evento de alteração do valor. */
-  onValueChanged?: { (value: any): void };
-}
+import { InputCheckboxOptions } from '../../shared/models/Input'
 
 export default function InputCheckbox(options: InputCheckboxOptions) {
   function onValueChanged(event: ChangeEvent<HTMLInputElement>) {

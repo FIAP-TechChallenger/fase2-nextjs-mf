@@ -1,13 +1,6 @@
 "use client";
+import { InputLabelOptions } from '../../shared/models/Input'
 
-export interface InputLabelOptions {
-  /** Texto do label */
-  text: string;
-  /** Identificador do campo que o label faz parte */
-  htmlFor?: string;
-  /** Especifica se o texto do label deve ficar em negrito(bold). */
-  textBold?: boolean;
-}
 
 export default function InputLabel(options: InputLabelOptions) {
   return (

@@ -2,30 +2,7 @@
 
 import { ChangeEvent } from "react";
 import InputLabel from "./InputLabel";
-
-export interface InputSelectOptions {
-  /** Identificador */
-  name: string;
-  /** Texto do label */
-  label: string;
-  /** Valor da opção selecionada */
-  value?: string | number;
-  /** Erro */
-  error?: string;
-  /** Opções disponíveis */
-  options?: InputSelectOption[];
-  /** Estilo */
-  style?: "ligth" | "dark";
-  /** Evento de alteração do valor. */
-  onValueChanged?: { (value: any): void };
-}
-
-export interface InputSelectOption {
-  /** Valor da opção, utilizado para identificar o valor selecionado. */
-  value: any;
-  /** Texto exibido para o usuário */
-  label: string;
-}
+import { InputSelectOptions  } from '../../shared/models/Input'
 
 export default function InputSelect(options: InputSelectOptions) {
   const style = options.style ?? "ligth";

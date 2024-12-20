@@ -2,29 +2,7 @@
 
 import { ChangeEvent } from "react";
 import InputLabel from "./InputLabel";
-
-export interface InputOptions {
-  /** Identificador */
-  name: string;
-  /** Texto do label */
-  label: string;
-  /** Tipo de input */
-  type: string;
-  /** Valor do input */
-  value?: string | number;
-  /** Placeholder */
-  placeholder?: string;
-  /** Estilo */
-  style?: "ligth" | "dark";
-  /** Erro */
-  error?: string;
-  /** Classes css */
-  className?: string;
-  /** Especifica se o texto do label deve ficar em negrito(bold). */
-  labelTextBold?: boolean;
-  /** Evento de alteração do valor. */
-  onValueChanged?: { (value: any): void };
-}
+import {InputOptions} from '../../shared/models/Input'
 
 export default function Input(options: InputOptions) {
   const style = options.style ?? "ligth";

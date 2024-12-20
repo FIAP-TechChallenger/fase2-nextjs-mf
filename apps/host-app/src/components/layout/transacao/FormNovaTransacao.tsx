@@ -1,10 +1,11 @@
 "use client";
 import { useState } from "react";
-import InputSelect, { InputSelectOption } from "@/components/forms/InputSelect";
+import InputSelect from "@/components/forms/InputSelect";
 import Input from "@/components/forms/Input";
 import Button from "@/components/ui/Button";
 import { TipoTransacao } from "@/shared/types/TipoTransacao";
 import {FormularioProps } from '../../../shared/models/Formulario'
+import { InputSelectOption } from '../../../shared/models/Input'
 
 export default function FormNovaTransacao({ deposito, transferencia, novaTransacao, userId }: FormularioProps) {
   const [formData, setFormData] = useState({
