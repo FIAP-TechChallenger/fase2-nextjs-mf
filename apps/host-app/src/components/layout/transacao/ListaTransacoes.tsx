@@ -1,15 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { Transacao, useTransacoesContext } from "@/context/TransacoesContext";
+import {  useTransacoesContext } from "@/context/TransacoesContext";
+import { Transacao , ListaTransacoesOptions } from "../../../shared/models/Transacao";
 import TransacaoConfirmDelete from "./TransacaoConfirmDelete";
 import TransacaoItem from "./TransacaoItem";
 import TransacaoEditModal from "./TransacaoEditModal";
-
-export interface ListaTransacoesOptions {
-  transacoes: Transacao[];
-  showActions: boolean;
-}
 
 export default function ListaTransacoes(options: ListaTransacoesOptions) {
   const { deletarTransacao } = useTransacoesContext();
@@ -31,7 +27,7 @@ export default function ListaTransacoes(options: ListaTransacoesOptions) {
 
   function confirmarDelete() {
     if (transacaoSelecionada) {
-      deletarTransacao(transacaoSelecionada.id);
+      deletarTransacao(Number(transacaoSelecionada.id));
       fecharModal();
     }
   }

@@ -10,25 +10,7 @@ import {
   putTransacoes,
 } from "../services/transacoesServices";
 import { useSession } from "next-auth/react";
-
-export interface Transacao {
-  id?: number;
-  userId: number;
-  tipoTransacao: string;
-  valor: number;
-  date: string;
-}
-
-interface TransacoesContextData {
-  transacoes: Transacao[];
-  saldo: number;
-  deposito: (number: number) => Promise<void>;
-  transferencia: (number: number) => Promise<void>;
-  novaTransacao: (tipoTransacao: string, valor: number, date: string, userId: number) => Promise<void>;
-  atualizarTransacao: any;
-  deletarTransacao: any;
-  user: any;
-}
+import { Transacao , TransacoesContextData } from "../shared/models/Transacao";
 
 const TransacoesContext = createContext<TransacoesContextData | undefined>(undefined);
 
@@ -37,8 +19,8 @@ export function TransacoesProvider({ children }: { children: ReactNode }) {
   const user = (session?.user as any) || {};
   const [transacoes, setTransacoes] = useState<Transacao[]>([]);
   const [saldo, setSaldo] = useState<number>(0);
+  
   // const [loading, setLoading] = useState<boolean>(true);
-
   useEffect(() => {
     if (session?.user?.id) {
       const fetchData = async () => {

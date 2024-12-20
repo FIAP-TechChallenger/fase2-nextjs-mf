@@ -1,16 +1,9 @@
 "use client";
 
-import { Transacao } from "@/context/TransacoesContext";
 import IconButton from "@/components/ui/IconButton";
 import { FormatoData } from "@/shared/types/FormatoData";
 import { formatarData, formatarMoeda } from "@/shared/utils/Formatters";
-
-export interface TransacaoItemOptions {
-  item: Transacao;
-  showActions: boolean;
-  onEditClicked?: { (): void };
-  onDeleteClicked?: { (): void };
-}
+import {TransacaoItemOptions} from '../../../shared/models/Transacao'
 
 export default function TransacaoItem(options: TransacaoItemOptions) {
   const { item } = options;

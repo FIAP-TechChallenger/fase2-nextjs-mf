@@ -4,13 +4,7 @@ import InputSelect, { InputSelectOption } from "@/components/forms/InputSelect";
 import Input from "@/components/forms/Input";
 import Button from "@/components/ui/Button";
 import { TipoTransacao } from "@/shared/types/TipoTransacao";
-
-type FormularioProps = {
-  deposito: (valor: number) => void;
-  transferencia: (valor: number) => void;
-  novaTransacao: (tipo: string, valor: number, date: string, userId: number) => void;
-  userId: number;
-};
+import {FormularioProps } from '../../../shared/models/Formulario'
 
 export default function FormNovaTransacao({ deposito, transferencia, novaTransacao, userId }: FormularioProps) {
   const [formData, setFormData] = useState({
@@ -37,7 +31,7 @@ export default function FormNovaTransacao({ deposito, transferencia, novaTransac
     resetForm();
   };
 
-  const handleChange = (name: string, value: any) => {
+  const handleChange = (name: string, value: number) => {
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,

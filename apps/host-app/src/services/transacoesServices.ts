@@ -1,7 +1,15 @@
 import { Transacao as BDTransacao } from "@libs/db";
 
-interface Transacao {
+export interface Transacao {
+  id?: number;
   userId: number;
+  tipoTransacao: string;
+  valor: number;
+  date: string;
+}
+
+interface transacaoAtualizada {
+  transacaoId: number;
   tipoTransacao: string;
   valor: number;
   date: string;
@@ -75,7 +83,7 @@ export const postTransacao = async (transacao: Transacao) => {
   return data;
 };
 
-export const putTransacoes = async (transacaoAtualizada: any) => {
+export const putTransacoes = async (transacaoAtualizada: transacaoAtualizada) => {
   const { transacaoId, tipoTransacao, valor, date } = transacaoAtualizada;
   const response = await fetch(`api/transacoes?id=${transacaoId}`, {
     method: "PUT",

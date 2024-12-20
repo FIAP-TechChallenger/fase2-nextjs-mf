@@ -1,14 +1,7 @@
 import Modal from "@/components/ui/Modal";
 import React from "react";
 import FormEditarTransacao from "./FormEditarTransacao";
-import { Transacao } from "@/context/TransacoesContext";
-
-interface TransacaoEditModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  transacao: Transacao;
-}
+import {TransacaoEditModalProps} from '../../../shared/models/Transacao'
 
 export default function TransacaoEditModal(options: TransacaoEditModalProps) {
   return (

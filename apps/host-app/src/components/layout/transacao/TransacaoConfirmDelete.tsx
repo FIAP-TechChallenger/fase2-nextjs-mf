@@ -1,16 +1,7 @@
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import React from "react";
-
-interface TransacaoModalConfirmDeleteProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  tipoTransacao: string;
-  valor: number;
-  date: string;
-  isSubmitting?: boolean;
-}
+import {TransacaoModalConfirmDeleteProps} from "../../../shared/models/Transacao"
 
 export default function TransacaoEditModal(options: TransacaoModalConfirmDeleteProps) {
   return (

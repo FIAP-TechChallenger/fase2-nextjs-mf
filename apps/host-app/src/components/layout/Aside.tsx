@@ -10,9 +10,11 @@ export interface AsideOptions {
 
 export default function Aside(options: AsideOptions) {
   const pathName = usePathname();
-
+  
   function linkActive(link: string) {
-    return pathName === link ? "text-fiap-green hover:text-gray-500" : "text-black hover:text-gray-500";
+    return pathName === link 
+    ? "text-fiap-green hover:text-gray-500" 
+    : "text-black hover:text-gray-500";
   }
   function liActive(link: string) {
     return pathName === link

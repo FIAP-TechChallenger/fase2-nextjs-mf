@@ -1,17 +1,12 @@
 "use client";
 
-import { Transacao, useTransacoesContext } from "@/context/TransacoesContext";
+import {  useTransacoesContext } from "@/context/TransacoesContext";
+import { FormEditarTransacaoProps } from "../../../shared/models/Formulario";
 import Input from "@/components/forms/Input";
 import InputSelect, { InputSelectOption } from "@/components/forms/InputSelect";
 import Button from "@/components/ui/Button";
 import { useState } from "react";
 
-interface FormEditarTransacaoProps {
-  transacao: Transacao;
-  showCancel?: boolean;
-  onCancelClicked?: { (): void };
-  onConfirmClicked?: { (): void };
-}
 
 export default function FormEditarTransacao(options: FormEditarTransacaoProps) {
   const { atualizarTransacao } = useTransacoesContext();
@@ -37,7 +32,7 @@ export default function FormEditarTransacao(options: FormEditarTransacaoProps) {
     confirmarTransacao();
   };
 
-  const handleChange = (name: string, value: any) => {
+  const handleChange = (name: string, value: number) => {
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -46,7 +41,7 @@ export default function FormEditarTransacao(options: FormEditarTransacaoProps) {
 
   const confirmarTransacao = () => {
     const { tipoTransacao, valor, date } = formData;
-    atualizarTransacao(options.transacao.id, tipoTransacao, valor, date);
+    atualizarTransacao(Number(options.transacao.id), tipoTransacao, valor, date);
 
     if (options.onConfirmClicked) options.onConfirmClicked();
   };
