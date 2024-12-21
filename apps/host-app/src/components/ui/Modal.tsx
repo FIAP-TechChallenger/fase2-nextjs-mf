@@ -1,12 +1,5 @@
 import React, { ReactNode } from "react";
-
-export interface ModalOptions {
-  children: ReactNode;
-  isOpen: boolean;
-  className?: string;
-}
-
-
+import { ModalOptions} from '../../shared/models/Modal'
 
 export default function Modal(options: ModalOptions) {
   if (!options.isOpen) return null;

@@ -8,6 +8,7 @@ import TransacaoItem from "./TransacaoItem";
 import TransacaoEditModal from "./TransacaoEditModal";
 
 export default function ListaTransacoes(options: ListaTransacoesOptions) {
+  
   const { deletarTransacao } = useTransacoesContext();
   const [confirmDeleteIsOpen, setConfirmDeleteIsOpen] = useState(false);
   const [editIsOpen, setEditIsOpen] = useState(false);
