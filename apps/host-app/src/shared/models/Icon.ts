@@ -1,11 +1,13 @@
-import { ButtonColors } from "../../components/ui/Button";
+import { ButtonColors } from "@/components/ui/Button";
 
 export interface IconOptions {
-    /** Nome do icone */
-    name: string;
-    /** Estilos customizados. */
-    className?: string;
-  }
+  /** Nome do icone */
+  name: string;
+  /** Estilos customizados. */
+  className?: string;
+  /** Título */
+  title?: string;
+}
 
 export interface IconButtonOptions {
   /** Nome do icone */
@@ -14,6 +16,8 @@ export interface IconButtonOptions {
   color?: ButtonColors;
   /** Estilos customizados. */
   className?: string;
+  /** Título */
+  title?: string;
   /** Função executada quando é clicado no botão */
   onClick?: { (): void };
 }
