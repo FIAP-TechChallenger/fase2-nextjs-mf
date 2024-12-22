@@ -10,7 +10,7 @@ import {
   putTransacoes,
 } from "../services/transacoesServices";
 import { useSession } from "next-auth/react";
-import { Transacao , TransacoesContextData } from "../shared/models/Transacao";
+import { Transacao, TransacoesContextData } from "@/shared/models/Transacao";
 
 const TransacoesContext = createContext<TransacoesContextData | undefined>(undefined);
 
@@ -19,7 +19,7 @@ export function TransacoesProvider({ children }: { children: ReactNode }) {
   const user = (session?.user as any) || {};
   const [transacoes, setTransacoes] = useState<Transacao[]>([]);
   const [saldo, setSaldo] = useState<number>(0);
-  
+
   // const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
     if (session?.user?.id) {
@@ -85,15 +85,15 @@ export function TransacoesProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const novaTransacao = async (tipoTransacao: string, valor: number, date: string, userId: number) => {
+  const novaTransacao = async (tipoTransacao: string, valor: number, date: string, userId: number, anexo?: File) => {
     if (tipoTransacao === "transferencia" && !verificaSaldo(valor)) {
       alert("Saldo insuficiente para realizar a transferência.");
       return;
     }
 
-    const transacao: Transacao = { userId, tipoTransacao, valor, date };
-    await postTransacao(transacao);
-    await atualizaTransacoes();
+    const transacao: Transacao = { userId, tipoTransacao, valor, date, anexo };
+    const result = await postTransacao(transacao);
+    if (result) await atualizaTransacoes();
   };
 
   const verificaSaldo = (valor: number): boolean => {
@@ -103,16 +103,26 @@ export function TransacoesProvider({ children }: { children: ReactNode }) {
     return true;
   };
 
-  const atualizarTransacao = async (transacaoId: number, tipoTransacao: string, valor: number, date: string) => {
+  const atualizarTransacao = async (
+    transacaoId: number,
+    tipoTransacao: string,
+    valor: number,
+    date: string,
+    anexo?: File
+  ) => {
     try {
       if (!user?.id) throw new Error("Usuário não autenticado.");
 
-      const transacaoAtualizada = { transacaoId, tipoTransacao, valor, date };
-      await putTransacoes(transacaoAtualizada);
-      await atualizaTransacoes();
-      await atualizarSaldo();
+      const transacaoAtualizada = { transacaoId, tipoTransacao, valor, date, anexo };
+      const result = await putTransacoes(transacaoAtualizada);
+      if (result) {
+        await atualizaTransacoes();
+        await atualizarSaldo();
+      }
+      return result;
     } catch (error) {
       console.error("Erro ao atualizar a transação:", error);
+      return false;
     }
   };
 

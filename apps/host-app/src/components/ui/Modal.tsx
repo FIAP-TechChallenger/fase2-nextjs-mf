@@ -4,9 +4,8 @@ export interface ModalOptions {
   children: ReactNode;
   isOpen: boolean;
   className?: string;
+  childrenClassName?: string;
 }
-
-
 
 export default function Modal(options: ModalOptions) {
   if (!options.isOpen) return null;
@@ -17,7 +16,9 @@ export default function Modal(options: ModalOptions) {
         options.className || ""
       }`}
     >
-      <div className="bg-fiap-white p-6 rounded-lg shadow-lg">{options.children}</div>
+      <div className={`bg-fiap-white p-6 rounded-lg shadow-lg ${options.childrenClassName || ""}`}>
+        {options.children}
+      </div>
     </div>
   );
 }

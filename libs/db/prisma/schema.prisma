@@ -25,7 +25,9 @@ model Transacao{
   valor Float?
   date DateTime?
   contaId Int
-  conta Conta  @relation(fields: [contaId], references: [id]) 
+  conta Conta  @relation(fields: [contaId], references: [id])
+  anexo Bytes?
+  anexoName String?
 }
 
 model Saldo {

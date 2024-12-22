@@ -1,14 +1,23 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import InputSelect from "@/components/forms/InputSelect";
 import Input from "@/components/forms/Input";
 import Button from "@/components/ui/Button";
 import { TipoTransacao } from "@/shared/types/TipoTransacao";
-import {FormularioProps } from '../../../shared/models/Formulario'
-import { InputSelectOption } from '../../../shared/models/Input'
+import { FormularioProps } from "@/shared/models/Formulario";
+import { InputSelectOption } from "@/shared/models/Input";
+import FileUploader, { FileUploaderRef } from "@/components/forms/FileUploader";
+
+type TransacaoForm = {
+  tipoTransacao: string;
+  valor: number;
+  date: string;
+  anexo?: File;
+};
 
 export default function FormNovaTransacao({ deposito, transferencia, novaTransacao, userId }: FormularioProps) {
-  const [formData, setFormData] = useState({
+  const fileUploaderRef = useRef<FileUploaderRef>();
+  const [formData, setFormData] = useState<TransacaoForm>({
     tipoTransacao: "deposito",
     valor: 0,
     date: new Date().toISOString(),
@@ -32,7 +41,7 @@ export default function FormNovaTransacao({ deposito, transferencia, novaTransac
     resetForm();
   };
 
-  const handleChange = (name: string, value: number) => {
+  const handleChange = (name: string, value: any) => {
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -40,9 +49,9 @@ export default function FormNovaTransacao({ deposito, transferencia, novaTransac
   };
 
   const processarTransacao = () => {
-    const { tipoTransacao, valor, date } = formData;
+    const { tipoTransacao, valor, date, anexo } = formData;
 
-    novaTransacao(tipoTransacao, valor, date, userId);
+    novaTransacao(tipoTransacao, valor, date, userId, anexo);
 
     if (tipoTransacao === TipoTransacao.DEPOSITO) {
       deposito(valor);
@@ -57,7 +66,9 @@ export default function FormNovaTransacao({ deposito, transferencia, novaTransac
       tipoTransacao: "deposito",
       valor: 0,
       date: new Date().toISOString(),
+      anexo: undefined,
     });
+    fileUploaderRef.current?.clear();
   };
   const isFormValid = () => {
     const { tipoTransacao, valor, date } = formData;
@@ -100,6 +111,14 @@ export default function FormNovaTransacao({ deposito, transferencia, novaTransac
         style="dark"
         value={formData.date}
         onValueChanged={(value) => handleChange("date", value)}
+      />
+      <FileUploader
+        ref={fileUploaderRef}
+        name="anexo"
+        label="Anexo"
+        style="dark"
+        accept="image/*,application/pdf,.docx,.xlsx"
+        onValueChanged={(value) => handleChange("anexo", value)}
       />
 
       <Button type="submit" text="Adicionar Transação" color="blue" />

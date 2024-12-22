@@ -10,6 +10,8 @@ export interface IconButtonOptions {
   color?: ButtonColors;
   /** Estilos customizados. */
   className?: string;
+  /** Título */
+  title?: string;
   /** Função executada quando é clicado no botão */
   onClick?: { (): void };
 }
@@ -43,7 +45,7 @@ export default function IconButton(options: IconButtonOptions) {
       }`}
       onClick={onClick}
     >
-      <Icon className="!text-base" name={options.icon} />
+      <Icon className="!text-base" name={options.icon} title={options.title} />
     </div>
   );
 }

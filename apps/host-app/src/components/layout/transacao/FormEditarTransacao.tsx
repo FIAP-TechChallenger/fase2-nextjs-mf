@@ -1,15 +1,18 @@
 "use client";
 
-import {  useTransacoesContext } from "@/context/TransacoesContext";
-import { FormEditarTransacaoProps } from "../../../shared/models/Formulario";
+import { useTransacoesContext } from "@/context/TransacoesContext";
+import { FormEditarTransacaoProps } from "@/shared/models/Formulario";
 import Input from "@/components/forms/Input";
 import InputSelect from "@/components/forms/InputSelect";
-import { InputSelectOption  } from '../../../shared/models/Input'
+import { InputSelectOption } from "@/shared/models/Input";
 import Button from "@/components/ui/Button";
-import { useState } from "react";
-
+import { useRef, useState } from "react";
+import FileUploader, { FileUploaderRef } from "@/components/forms/FileUploader";
+import TransacaoAnexoDownload from "./TransacaoAnexoDownload";
+import InputLabel from "@/components/forms/InputLabel";
 
 export default function FormEditarTransacao(options: FormEditarTransacaoProps) {
+  const fileUploaderRef = useRef<FileUploaderRef>();
   const { atualizarTransacao } = useTransacoesContext();
   const [formData, setFormData] = useState(options.transacao);
 
@@ -21,6 +24,10 @@ export default function FormEditarTransacao(options: FormEditarTransacaoProps) {
 
   function onCancelClicked() {
     if (options.onCancelClicked) options.onCancelClicked();
+  }
+
+  function onAnexoRemoved() {
+    setFormData({ ...formData, anexoName: undefined });
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -40,9 +47,10 @@ export default function FormEditarTransacao(options: FormEditarTransacaoProps) {
     }));
   };
 
-  const confirmarTransacao = () => {
-    const { tipoTransacao, valor, date } = formData;
-    atualizarTransacao(Number(options.transacao.id), tipoTransacao, valor, date);
+  const confirmarTransacao = async () => {
+    const { tipoTransacao, valor, date, anexo } = formData;
+    const result = await atualizarTransacao(Number(options.transacao.id), tipoTransacao, valor, date, anexo);
+    console.log("result", result);
 
     if (options.onConfirmClicked) options.onConfirmClicked();
   };
@@ -90,6 +98,21 @@ export default function FormEditarTransacao(options: FormEditarTransacaoProps) {
           value={formData.date}
           onValueChanged={(value) => handleChange("date", value)}
         />
+        <FileUploader
+          ref={fileUploaderRef}
+          name="anexo"
+          label={formData.anexoName ? "Alterar anexo" : "Anexo"}
+          style="dark"
+          accept="image/*,application/pdf,.docx,.xlsx"
+          onValueChanged={(value) => handleChange("anexo", value)}
+        />
+
+        {formData.anexoName && (
+          <div className="flex flex-col">
+            <InputLabel text="Anexo salvo"></InputLabel>
+            <TransacaoAnexoDownload displayType="anexoName" item={formData} onRemoveAnexo={onAnexoRemoved} />
+          </div>
+        )}
 
         <div className="flex gap-4">
           {options.showCancel && <Button type="button" text="Cancelar" color="red" onClick={onCancelClicked} />}

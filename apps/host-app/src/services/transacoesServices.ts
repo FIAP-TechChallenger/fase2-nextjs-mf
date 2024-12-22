@@ -6,6 +6,7 @@ export interface Transacao {
   tipoTransacao: string;
   valor: number;
   date: string;
+  anexo?: File;
 }
 
 interface transacaoAtualizada {
@@ -13,6 +14,7 @@ interface transacaoAtualizada {
   tipoTransacao: string;
   valor: number;
   date: string;
+  anexo?: File;
 }
 
 export const getSaldo = async (userId: number) => {
@@ -24,6 +26,7 @@ export const getSaldo = async (userId: number) => {
   const saldo = data.total;
   return saldo;
 };
+
 export const postSaldo = async (userId: number, newBalance: number) => {
   const response = await fetch(`api/saldo`, {
     method: "PUT",
@@ -58,54 +61,46 @@ export const getTransacao = async (id: number): Promise<BDTransacao> => {
 };
 
 export const postTransacao = async (transacao: Transacao) => {
-  const { date, tipoTransacao, valor, userId } = transacao;
-  const dataObjeto = new Date(date);
-  const valorNumerico = Number(valor);
+  const formData = new FormData();
+
+  if (transacao.anexo) formData.append("anexo", transacao.anexo);
+
+  formData.append("tipoTransacao", transacao.tipoTransacao);
+  formData.append("valor", transacao.valor.toString());
+  formData.append("date", transacao.date);
+  formData.append("userId", transacao.userId.toString());
 
   const response = await fetch(`api/transacoes`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      date: dataObjeto.toISOString(),
-      tipoTransacao,
-      valor: valorNumerico,
-      userId,
-    }),
+    body: formData,
   });
 
-  if (!response.ok) {
-    throw new Error("Erro ao adicionar transação");
-  }
+  window.alert(!response.ok ? "Erro ao adicionar transação" : "Transação adicionada com sucesso");
 
-  const data = await response.json();
-  return data;
+  return response.ok;
 };
 
-export const putTransacoes = async (transacaoAtualizada: transacaoAtualizada) => {
-  const { transacaoId, tipoTransacao, valor, date } = transacaoAtualizada;
-  const response = await fetch(`api/transacoes?id=${transacaoId}`, {
+export const putTransacoes = async (transacao: transacaoAtualizada) => {
+  const formData = new FormData();
+
+  if (transacao.anexo) formData.append("anexo", transacao.anexo);
+
+  formData.append("tipoTransacao", transacao.tipoTransacao);
+  formData.append("valor", transacao.valor.toString());
+  formData.append("date", transacao.date);
+
+  const response = await fetch(`api/transacoes/${transacao.transacaoId}`, {
     method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      tipoTransacao,
-      valor: Number(valor),
-      date: new Date(date).toISOString(),
-    }),
+    body: formData,
   });
 
-  if (!response.ok) {
-    throw new Error("Erro ao atualizar a transação services");
-  }
+  window.alert(!response.ok ? "Erro ao alterar transação" : "Transação alterada com sucesso");
 
-  return await response.json();
+  return response.ok;
 };
 
 export const DeleteTransacao = async (transacaoId: number) => {
-  const response = await fetch(`api/transacoes?id=${transacaoId}`, {
+  const response = await fetch(`api/transacoes/${transacaoId}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

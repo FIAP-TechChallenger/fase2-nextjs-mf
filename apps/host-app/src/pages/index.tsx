@@ -1,4 +1,3 @@
-import { useEffect, useState, ComponentType } from "react";
 import Link from "next/link";
 import HeaderInicial from "@/components/layout/HeaderInicial";
 import Footer from "@/components/layout/Footer";
@@ -32,20 +31,6 @@ const data = {
 
 const Home: React.FC = () => {
   const features = data.features;
-  // Define o estado com o tipo correto (React component ou null)
-  const [ButtonRemote, setButtonRemote] = useState<ComponentType | null>(null);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      // Carrega o componente remoto usando lazy
-      const loadRemoteComponent = async () => {
-        const { default: Component } = await import("remote/Button"); // 'remote/Button' é o módulo remoto
-        setButtonRemote(() => Component); // Atualiza o estado com o componente carregado
-      };
-
-      loadRemoteComponent();
-    }
-  }, []);
 
   return (
     <main className="flex flex-col overflow-hidden h-screen w-screen bg-gradient-to-b from-fiap-navy-blue to-white">
@@ -66,8 +51,6 @@ const Home: React.FC = () => {
               />
             </div>
             <div className="md:hidden flex justify-center mt-3 gap-6 flex-wrap">
-              {ButtonRemote ? <ButtonRemote /> : <p>Loading remote component...</p>}
-
               <Link href="/nova-conta">
                 <Button color="black" text="Abrir minha conta" />
               </Link>

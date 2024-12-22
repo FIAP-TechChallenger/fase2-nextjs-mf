@@ -1,5 +1,12 @@
 import TransacoesRepository from "@/repositories/TransacoesRepository";
+import { createReadStream, ReadStream } from "fs";
 import { NextApiRequest, NextApiResponse } from "next";
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
 const transacoesRepository = new TransacoesRepository();
 
@@ -22,70 +29,62 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       console.error("Erro ao buscar transações:", error);
       return res.status(500).json({ error: "Erro ao buscar transação." });
     }
-  }
+  } else if (req.method === "POST") {
+    const { IncomingForm } = await import("formidable");
+    const form = new IncomingForm();
 
-  if (req.method === "POST") {
-    const { userId, tipoTransacao, valor, date } = req.body;
-
-    try {
-      if (!userId) {
-        return res.status(400).json({ error: "userId não fornecido." });
+    form.parse(req, async (err, fields, files) => {
+      if (err) {
+        console.error("Erro ao processar o arquivo:", err);
+        return res.status(500).end("Erro ao processar o arquivo.");
       }
-      const novaTransacao = await transacoesRepository.createTransacao(userId, tipoTransacao, valor, date);
 
+      const tipoTransacao = fields.tipoTransacao?.[0];
+      const valor = fields.valor?.[0] ? parseFloat(fields.valor[0]) : null;
+      const date = fields.date?.[0] ? new Date(fields.date[0]) : null;
+      const userId = fields.userId?.[0] ? parseInt(fields.userId[0]) : null;
+
+      if (!userId || !valor || !date || !tipoTransacao) {
+        return res.status(400).json({ error: "Requisição incompleta." });
+      }
+
+      const file = Array.isArray(files.anexo) ? files.anexo[0] : files.anexo;
+      let anexoBytes: Uint8Array<ArrayBufferLike> | null = null;
+
+      if (file) {
+        try {
+          const fileStream = createReadStream(file.filepath);
+          anexoBytes = await streamToBuffer(fileStream);
+        } catch (error) {
+          console.error("Erro ao processar o arquivo:", error);
+          return res.status(500).json({ message: "Erro ao processar o arquivo anexado." });
+        }
+      }
+
+      const novaTransacao = await transacoesRepository.createTransacao(
+        userId,
+        tipoTransacao,
+        valor,
+        date,
+        anexoBytes,
+        file?.originalFilename || null
+      );
+
+      novaTransacao.anexo = null;
       return res.status(201).json(novaTransacao);
-    } catch (error) {
-      console.error("Erro ao criar transação:", error);
-      return res.status(500).json({ error: "Erro ao criar transação." });
-    }
+    });
+  } else {
+    // Caso o método não seja permitido
+    res.setHeader("Allow", ["GET", "POST"]);
+    return res.status(405).json({ error: "Método não permitido" });
   }
-
-  if (req.method === "PUT") {
-    const id = parseInt((req.query.id as string) || "0", 10);
-    const { tipoTransacao, valor, date } = req.body;
-
-    if (isNaN(id) || id <= 0) {
-      return res.status(400).json({ error: "id não fornecido ou inválido." });
-    }
-
-    try {
-      const transacaoExistente = await transacoesRepository.getTransacoesById(id);
-
-      if (!transacaoExistente) {
-        return res.status(404).json({ error: "Transação não encontrada." });
-      }
-
-      const transacaoAtualizada = await transacoesRepository.updateTransacao(id, tipoTransacao, valor, date);
-
-      return res.status(200).json(transacaoAtualizada);
-    } catch (error) {
-      console.error("Erro ao atualizar transação:", error);
-      return res.status(500).json({ error: "Erro ao atualizar transação." });
-    }
-  }
-
-  if (req.method === "DELETE") {
-    const id = parseInt((req.query.id as string) || "0", 10);
-
-    if (isNaN(id) || id <= 0) {
-      return res.status(400).json({ error: "ID não fornecido ou inválido." });
-    }
-
-    try {
-      const transacaoDeletada = await transacoesRepository.DeletarTransacao(id);
-
-      if (!transacaoDeletada) {
-        return res.status(404).json({ error: "Transação não encontrada." });
-      }
-
-      return res.status(200).json({ message: "Transação deletada com sucesso." });
-    } catch (error) {
-      console.error("Erro ao deletar transação:", error);
-      return res.status(500).json({ error: "Erro ao deletar transação." });
-    }
-  }
-
-  // Caso o método não seja permitido
-  res.setHeader("Allow", ["GET", "POST", "PUT", "DELETE"]);
-  return res.status(405).end(`Method ${req.method} Not Allowed`);
 }
+
+// Função para converter Stream para Buffer
+const streamToBuffer = async (stream: ReadStream) => {
+  const chunks = [];
+  for await (const chunk of stream) {
+    chunks.push(chunk);
+  }
+  return Buffer.concat(chunks);
+};

@@ -1,9 +1,9 @@
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import React from "react";
-import {TransacaoModalConfirmDeleteProps} from "../../../shared/models/Transacao"
+import { TransacaoModalConfirmDeleteProps } from "@/shared/models/Transacao";
 
-export default function TransacaoEditModal(options: TransacaoModalConfirmDeleteProps) {
+export default function TransacaoConfirmDelete(options: TransacaoModalConfirmDeleteProps) {
   return (
     <Modal isOpen={options.isOpen}>
       <h3 className="text-lg font-semibold mb-4">Excluir transação?</h3>

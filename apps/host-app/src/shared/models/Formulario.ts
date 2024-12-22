@@ -1,4 +1,4 @@
-import {Transacao} from '../models/Transacao'
+import { Transacao } from "../models/Transacao";
 
 export interface FormEditarTransacaoProps {
   transacao: Transacao;
@@ -7,9 +7,9 @@ export interface FormEditarTransacaoProps {
   onConfirmClicked?: { (): void };
 }
 
-export interface FormularioProps  {
+export interface FormularioProps {
   deposito: (valor: number) => void;
   transferencia: (valor: number) => void;
-  novaTransacao: (tipo: string, valor: number, date: string, userId: number) => void;
+  novaTransacao: (tipo: string, valor: number, date: string, userId: number, anexo?: File) => void;
   userId: number;
-};
+}

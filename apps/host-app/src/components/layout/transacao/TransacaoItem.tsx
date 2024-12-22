@@ -3,7 +3,8 @@
 import IconButton from "@/components/ui/IconButton";
 import { FormatoData } from "@/shared/types/FormatoData";
 import { formatarData, formatarMoeda } from "@/shared/utils/Formatters";
-import {TransacaoItemOptions} from '../../../shared/models/Transacao'
+import { TransacaoItemOptions } from "@/shared/models/Transacao";
+import TransacaoAnexoDownload from "./TransacaoAnexoDownload";
 
 export default function TransacaoItem(options: TransacaoItemOptions) {
   const { item } = options;
@@ -34,6 +35,7 @@ export default function TransacaoItem(options: TransacaoItemOptions) {
       <div className={`flex justify-between items-center ${options.showActions ? "mt-2" : ""}`}>
         <p className="text-gray-800 font-semibold text-lg">{valor}</p>
         <div className={`flex items-center gap-2 ${!options.showActions ? "hidden" : ""}`}>
+          <TransacaoAnexoDownload displayType="onlyButton" item={item} />
           <IconButton icon="edit" color="blue" onClick={onEditClicked} />
           <IconButton icon="delete" color="blue" onClick={onDeleteClicked} />
         </div>
