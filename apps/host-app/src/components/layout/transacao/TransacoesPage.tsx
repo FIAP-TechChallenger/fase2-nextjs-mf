@@ -2,7 +2,8 @@
 
 import React from "react";
 import { TipoTransacao, useFiltrosTransacoesContext } from "@/context/FiltroTransacoesContext";
-import Button, { ButtonColors } from "@/components/ui/Button";
+import Button from "@/components/ui/Button";
+import { ButtonColors } from "@/shared/types/Button";
 import Input from "@/components/forms/Input";
 import ListaTransacoes from "./ListaTransacoes";
 

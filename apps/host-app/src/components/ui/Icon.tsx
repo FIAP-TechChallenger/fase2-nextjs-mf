@@ -1,13 +1,6 @@
 "use client";
 
-export interface IconOptions {
-  /** Nome do icone */
-  name: string;
-  /** Estilos customizados. */
-  className?: string;
-  /** Título */
-  title?: string;
-}
+import { IconOptions } from "@/shared/models/Icon";
 
 export default function Icon(options: IconOptions) {
   return (

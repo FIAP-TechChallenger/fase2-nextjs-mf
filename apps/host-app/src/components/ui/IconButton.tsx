@@ -1,20 +1,7 @@
 "use client";
 
-import { ButtonColors } from "./Button";
 import Icon from "./Icon";
-
-export interface IconButtonOptions {
-  /** Nome do icone */
-  icon: string;
-  /** Cor do botão */
-  color?: ButtonColors;
-  /** Estilos customizados. */
-  className?: string;
-  /** Título */
-  title?: string;
-  /** Função executada quando é clicado no botão */
-  onClick?: { (): void };
-}
+import { IconButtonOptions } from "@/shared/models/Icon";
 
 export default function IconButton(options: IconButtonOptions) {
   function getColor() {

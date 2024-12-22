@@ -2,11 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-export interface AsideOptions {
-  removeOnMobile?: boolean;
-  onRouteClicked?: { (): void };
-}
+import {AsideOptions} from '../../shared/models/Aside'
 
 export default function Aside(options: AsideOptions) {
   const pathName = usePathname();

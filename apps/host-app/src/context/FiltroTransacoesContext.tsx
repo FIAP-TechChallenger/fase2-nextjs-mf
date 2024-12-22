@@ -1,17 +1,26 @@
-"use client";
-
 import { createContext, useContext, useState, useMemo, ReactNode } from "react";
 import { useTransacoesContext } from "./TransacoesContext";
+import type { TiposTransacao } from '../shared/types/TipoTransacao';
+import { Transacao } from "@/shared/models/Transacao";
 
-const FiltrosTransacoesContext = createContext<any | undefined>([]);
 
-export type TipoTransacao = "todos" | "deposito" | "transferencia";
+interface FiltrosTransacoesContextType {
+  transacoesFiltradas: Transacao[]; 
+  setTipoFiltroTransacao: (tipo: TiposTransacao) => void;
+  setDataInicio: (data: string) => void;
+  dataInicio: string;
+  dataFim: string;
+  setDataFim: (data: string) => void;
+  tipoFiltroTransacao: TiposTransacao;
+}
+
+const FiltrosTransacoesContext = createContext<FiltrosTransacoesContextType | undefined>(undefined);
 
 export function FiltrosTransacoesProvider({ children }: { children: ReactNode }) {
   const { transacoes } = useTransacoesContext();
   const [dataInicio, setDataInicio] = useState("");
   const [dataFim, setDataFim] = useState("");
-  const [tipoFiltroTransacao, setTipoFiltroTransacao] = useState<TipoTransacao>("todos");
+  const [tipoFiltroTransacao, setTipoFiltroTransacao] = useState<TiposTransacao>("todos");
 
   const transacoesFiltradas = useMemo(() => {
     const dataFinal = dataFim ? new Date(dataFim) : new Date();

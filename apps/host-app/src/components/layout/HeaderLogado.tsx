@@ -6,10 +6,8 @@ import Image from "next/image";
 import Icon from "@/components/ui/Icon";
 import { useState } from "react";
 import Aside from "./Aside";
+import {HeaderLogadoOptions} from '../../shared/models/Header'
 
-export interface HeaderLogadoOptions {
-  userName: string;
-}
 
 export default function HeaderLogado(options: HeaderLogadoOptions) {
   const [isOpen, setIsOpen] = useState(false);
