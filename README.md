@@ -13,57 +13,45 @@ Banco de Dados Postgres
 
 ---
 
-## Passo a Passo de Inicialização
+## Inicialização em Produção
+
+### 1. Iniciar Containers
+
+Certifique-se de que o Docker esteja instalado e em execução no seu sistema.
+Execute o comando abaixo para iniciar todos os serviços definidos em `./Docker/docker-compose.yml`.
+
+```bash
+npm run up-all
+```
+
+### 2. Acessar aplicação host
+
+Acesse a aplicação host na url em [http://localhost:3000](http://localhost:3000).
+
+---
+
+## Inicialização para Desenvolvimento
 
 ### 1. Instalar dependências
 
 Antes de qualquer coisa, instale as dependências necessárias para o projeto.
 
-#### Na raiz do repositório:
-
 ```bash
-npm install
-```
-
-#### No aplicativo host (apps/host-app):
-
-Entre na pasta do aplicativo host e instale as dependências locais:
-
-```bash
-cd apps/host-app
-npm install
-```
-
-#### No aplicativo Investimentos (apps/investimentos):
-
-Entre na pasta do aplicativo host e instale as dependências locais:
-
-```bash
-cd apps/investimentos
 npm install
 ```
 
 ---
 
-### 2. Iniciar o Banco de Dados com Docker Compose
+### 2. Iniciar Containers
 
-O banco de dados é gerenciado via Docker Compose. Certifique-se de que o Docker esteja instalado e em execução no seu sistema.
+Certifique-se de que o Docker esteja instalado e em execução no seu sistema.
 
 #### Suba os containers do Docker:
 
-Na pasta **Docker**:
+Execute o comando abaixo para iniciar o banco de dados definido em `./Docker/docker-compose.yml`.
 
 ```bash
-cd Docker
-docker-compose up -d
-```
-
-Isso iniciará os serviços definidos no `docker-compose.yml` (incluindo o banco de dados).
-
-#### Verifique os containers em execução:
-
-```bash
-docker ps
+npm run up-db
 ```
 
 ---
@@ -139,57 +127,3 @@ npm run dev
 ```
 
 O servidor de desenvolvimento do Angular será iniciado, e o aplicativo estará disponível em [http://localhost:3001](http://localhost:3001).
-
----
-
-## Scripts Importantes
-
-- **Instalar dependências na raiz**:
-
-  ```bash
-  npm install
-  ```
-
-- **Iniciar containers do Docker**:
-
-  ```bash
-  docker-compose up -d
-  ```
-
-- **Gerar cliente do Prisma**:
-
-  ```bash
-  npx prisma generate
-  ```
-
-- **Aplicar migrações do Prisma**:
-
-  ```bash
-  npx prisma migrate dev
-  ```
-
-- **Abrir Prisma Studio**:
-
-  ```bash
-  npx prisma studio
-  ```
-
-- **Iniciar o servidor do host-app**:
-
-  ```bash
-  npm run dev
-  ```
-
-- **Iniciar o servidor do investimentos**:
-  ```bash
-  npm run start
-  ```
-
----
-
-## Observações
-
-- Certifique-se de que o Docker está configurado corretamente e que os containers foram iniciados antes de rodar o Prisma ou o aplicativo.
-- Sempre instale as dependências na raiz antes de instalar dependências em subprojetos.
-
-Se encontrar algum problema, confira os logs do Docker ou do Prisma para diagnóstico.

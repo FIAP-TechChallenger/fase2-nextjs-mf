@@ -1,4 +1,4 @@
-import { ButtonColors } from "@/components/ui/Button";
+import { ButtonColors } from "../types/Button";
 
 export interface IconOptions {
   /** Nome do icone */

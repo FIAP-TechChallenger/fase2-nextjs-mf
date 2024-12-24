@@ -1,8 +1,8 @@
 "use client";
 
-export type { ButtonOptions } from "../../shared/models/Button"; // Altere para export type
+export type { ButtonOptions } from "@/shared/models/Button"; // Altere para export type
 
-import { ButtonOptions } from "../../shared/models/Button"; // Importe diretamente
+import { ButtonOptions } from "@/shared/models/Button"; // Importe diretamente
 
 export default function Button(options: ButtonOptions) {
   function getColor() {

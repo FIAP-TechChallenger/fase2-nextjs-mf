@@ -1,0 +1,27 @@
+# Primeiro estágio: Builder
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Copia os arquivos
+COPY ../package.json ../package-lock.json ./
+COPY ../apps/host-app ./apps/host-app/
+COPY ../libs ./libs/
+
+# Instala dependências
+RUN npm install
+
+# Gera o Prisma Client
+RUN npx prisma generate --schema=./libs/db/prisma/schema.prisma
+
+# Mude para o diretório do host-app
+WORKDIR /app/apps/host-app
+
+# Constrói o app Next.js para produção
+RUN npm run build
+
+# Expõe a porta da aplicação
+EXPOSE 3000
+
+# Comando para iniciar a aplicação
+CMD ["npm", "run", "start"]

@@ -1,5 +1,14 @@
 {
+  "workspaces": [
+    "apps/host-app",
+    "libs/*"
+  ],
+  "scripts": {
+    "up-all": "docker-compose -f ./Docker/docker-compose.yml up",
+    "up-db": "docker-compose -f ./Docker/docker-compose.yml up -d db"
+  },
   "devDependencies": {
+    "npx": "^10.2.2",
     "prisma": "^6.1.0"
   },
   "dependencies": {

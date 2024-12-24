@@ -1,22 +1,40 @@
-version: "3.8"
-
-services:
-  db:
-    image: postgres:latest
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ffase2-microfrontend
-      POSTGRES_DB: fiap-fase2-microfront
-    ports:
-      - "5432:5432" # Mapeia a porta do banco de dados para o seu host
-    volumes:
-      - postgres-data:/var/lib/postgresql/data # Persiste os dados entre reinicializações
-    networks:
-      - app-network
-
 networks:
   app-network:
     driver: bridge
 
 volumes:
-  postgres-data:
+  postgres-data: {}
+
+services:
+  db:
+    build:
+      context: ../
+      dockerfile: ./Docker/Dockerfile-Postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ffase2-microfrontend
+      POSTGRES_DB: fiap-fase2-microfront
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d fiap-fase2-microfront"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  host-app:
+    build:
+      context: ../
+      dockerfile: ./Docker/Dockerfile-HostApp
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: "postgresql://postgres:ffase2-microfrontend@db:5432/fiap-fase2-microfront"
+      #NEXT_PUBLIC_REMOTE_URL: "http://localhost:3000/_next/static/chunks/remoteEntry.js" # Configuração do Module Federation
+    networks:
+      - app-network

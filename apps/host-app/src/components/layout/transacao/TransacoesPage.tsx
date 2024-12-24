@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { TipoTransacao, useFiltrosTransacoesContext } from "@/context/FiltroTransacoesContext";
+import { useFiltrosTransacoesContext } from "@/context/FiltroTransacoesContext";
+import { TiposTransacao } from "@/shared/types/TipoTransacao";
 import Button from "@/components/ui/Button";
 import { ButtonColors } from "@/shared/types/Button";
 import Input from "@/components/forms/Input";
@@ -18,7 +19,7 @@ export default function TransacoesPage() {
     setDataFim,
   } = useFiltrosTransacoesContext();
 
-  function getFiltroTipoButtonColor(tipo: TipoTransacao): ButtonColors {
+  function getFiltroTipoButtonColor(tipo: TiposTransacao): ButtonColors {
     return tipo === tipoFiltroTransacao ? "blue" : "gray";
   }
 
