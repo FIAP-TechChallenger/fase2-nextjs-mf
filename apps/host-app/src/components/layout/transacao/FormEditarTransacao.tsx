@@ -10,11 +10,12 @@ import { useRef, useState } from "react";
 import FileUploader, { FileUploaderRef } from "@/components/forms/FileUploader";
 import TransacaoAnexoDownload from "./TransacaoAnexoDownload";
 import InputLabel from "@/components/forms/InputLabel";
+import {Transacao }from '../../../shared/models/Transacao'
 
 export default function FormEditarTransacao(options: FormEditarTransacaoProps) {
   const fileUploaderRef = useRef<FileUploaderRef>();
   const { atualizarTransacao } = useTransacoesContext();
-  const [formData, setFormData] = useState(options.transacao);
+  const [formData, setFormData] = useState<Transacao>(options.transacao);
 
   const tiposTransacao: InputSelectOption[] = [
     { value: "", label: "Selecione o Tipo" },
@@ -40,7 +41,7 @@ export default function FormEditarTransacao(options: FormEditarTransacaoProps) {
     confirmarTransacao();
   };
 
-  const handleChange = (name: string, value: number) => {
+  const handleChange = (name: string, value: string | number) => {
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -88,7 +89,7 @@ export default function FormEditarTransacao(options: FormEditarTransacaoProps) {
           label="Valor"
           style="dark"
           value={formData.valor}
-          onValueChanged={(value) => handleChange("valor", value)}
+          onValueChanged={(value) => handleChange("valor", Number(value))}
         />
         <Input
           name="date"

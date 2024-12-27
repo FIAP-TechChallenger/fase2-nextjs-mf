@@ -14,5 +14,5 @@ export interface ButtonOptions {
   /** Especifica que o botão esta desabilitado. */
   disabled?: boolean;
   /** Função executada quando é clicado no botão */
-  onClick?: { (): void };
+  onClick?: () => void;
 }

@@ -19,5 +19,5 @@ export interface IconButtonOptions {
   /** Título */
   title?: string;
   /** Função executada quando é clicado no botão */
-  onClick?: { (): void };
+  onClick?: () => void;
 }

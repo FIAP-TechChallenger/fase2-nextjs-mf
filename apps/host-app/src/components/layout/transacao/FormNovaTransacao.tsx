@@ -41,7 +41,7 @@ export default function FormNovaTransacao({ deposito, transferencia, novaTransac
     resetForm();
   };
 
-  const handleChange = (name: string, value: any) => {
+  const handleChange = (name: string, value: string | number) => {
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,

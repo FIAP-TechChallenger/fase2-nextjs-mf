@@ -18,7 +18,7 @@ export interface InputOptions {
   /** Especifica se o texto do label deve ficar em negrito(bold). */
   labelTextBold?: boolean;
   /** Evento de alteração do valor. */
-  onValueChanged?: { (value: any): void };
+  onValueChanged?: (value: string | number ) => void;
 }
 
 export interface InputCheckboxOptions {
@@ -33,7 +33,7 @@ export interface InputCheckboxOptions {
   /** Classes css */
   className?: string;
   /** Evento de alteração do valor. */
-  onValueChanged?: { (value: any): void };
+  onValueChanged?: (value: string | number | boolean) => void;
 }
 
 export interface InputLabelOptions {
@@ -46,7 +46,7 @@ export interface InputLabelOptions {
 }
 export interface InputSelectOption {
     /** Valor da opção, utilizado para identificar o valor selecionado. */
-    value: any;
+    value: string;
     /** Texto exibido para o usuário */
     label: string;
   }
@@ -65,6 +65,6 @@ export interface InputSelectOptions {
   /** Estilo */
   style?: "ligth" | "dark";
   /** Evento de alteração do valor. */
-  onValueChanged?: { (value: any): void };
+  onValueChanged?: (value: string | number ) => void;
 }
 

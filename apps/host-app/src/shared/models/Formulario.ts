@@ -3,8 +3,8 @@ import { Transacao } from "../models/Transacao";
 export interface FormEditarTransacaoProps {
   transacao: Transacao;
   showCancel?: boolean;
-  onCancelClicked?: { (): void };
-  onConfirmClicked?: { (): void };
+  onCancelClicked?: () => void;
+  onConfirmClicked?: () => void;
 }
 
 export interface FormularioProps {
