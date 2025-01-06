@@ -9,13 +9,15 @@
   },
   "dependencies": {
     "@module-federation/nextjs-mf": "^8.8.7",
+    "@reduxjs/toolkit": "^2.5.0",
     "@stitches/react": "^1.2.8",
     "@types/formidable": "^3.4.5",
     "formidable": "^3.5.2",
     "next": "^14.2.20",
     "next-auth": "^4.24.11",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-redux": "^9.2.0"
   },
   "devDependencies": {
     "@types/next-auth": "^3.13.0",
