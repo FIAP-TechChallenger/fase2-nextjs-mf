@@ -103,6 +103,17 @@ export function TransacoesProvider({ children }: { children: ReactNode }) {
     return true;
   };
 
+  const deletarTransacao = async (transacaoId: number) => {
+    try {
+      if (!transacaoId) throw new Error("Usuário não autenticado.");
+      await DeleteTransacao(transacaoId);
+      await atualizarSaldo();
+      await atualizaTransacoes();
+    } catch (error) {
+      console.error("Erro ao deletar a transação context:", error);
+    }
+  };
+  
   const atualizarTransacao = async (
     transacaoId: number,
     tipoTransacao: string,
@@ -126,20 +137,9 @@ export function TransacoesProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const deletarTransacao = async (transacaoId: number) => {
-    try {
-      if (!transacaoId) throw new Error("Usuário não autenticado.");
-      await DeleteTransacao(transacaoId);
-      await atualizarSaldo();
-      await atualizaTransacoes();
-    } catch (error) {
-      console.error("Erro ao deletar a transação context:", error);
-    }
-  };
-
   return (
     <TransacoesContext.Provider
-      value={{ transacoes, saldo, deposito, transferencia, novaTransacao, atualizarTransacao, deletarTransacao, user }}
+      value={{ transacoes, saldo, deposito, transferencia, novaTransacao, atualizarTransacao ,deletarTransacao, user }}
     >
       {children}
     </TransacoesContext.Provider>

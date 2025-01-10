@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useTransacoesContext } from "@/context/TransacoesContext";
 
 export default function CardNovaTransacao() {
-  const { deposito, transferencia, novaTransacao, user } = useTransacoesContext();
+  const { user } = useTransacoesContext();
   const userId = Number(user.id);
    
   return (
@@ -14,9 +14,6 @@ export default function CardNovaTransacao() {
         <h2 className="text-xl font-bold pb-3">Nova transação</h2>
 
         <FormNovaTransacao
-          deposito={deposito}
-          transferencia={transferencia}
-          novaTransacao={novaTransacao}
           userId={userId}
         />
       </div>
