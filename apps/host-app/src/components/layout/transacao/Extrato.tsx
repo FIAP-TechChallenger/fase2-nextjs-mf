@@ -1,11 +1,12 @@
 import ListaTransacoes from "./ListaTransacoes";
 import IconButton from "@/components/ui/IconButton";
 import { useRouter } from "next/navigation";
-import { useFiltrosTransacoesContext } from "@/context/FiltroTransacoesContext";
+import { useSelector } from "react-redux";
 
 export default function Extrato() {
   const router = useRouter();
-  const { transacoesFiltradas } = useFiltrosTransacoesContext();
+  const extratoRedux = useSelector((state: any) => state.filterTransaction.transacoesFiltradas)
+
 
   function onEditClicked() {
     router.push("/transferencias");
@@ -18,7 +19,7 @@ export default function Extrato() {
         <IconButton icon="edit" color="blue" onClick={onEditClicked} />
       </div>
 
-      <ListaTransacoes transacoes={transacoesFiltradas?.slice(-5)?.reverse()} showActions={false} />
+      <ListaTransacoes transacoes={extratoRedux?.slice(-5)?.reverse()} showActions={false} />
     </div>
   );
 }

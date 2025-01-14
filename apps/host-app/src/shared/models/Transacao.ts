@@ -59,3 +59,15 @@ export interface TransacaoAnexoDownloadOptions {
   displayType: "onlyButton" | "anexoName";
   onRemoveAnexo?: { (): void };
 }
+
+export interface TransacaoForm  {
+  tipoTransacao: string;
+  valor: number;
+  date: string;
+  anexo?: File;
+};
+
+export interface CardNovaTransacaoProps {
+  userId: number
+}
+

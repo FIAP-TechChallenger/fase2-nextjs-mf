@@ -10,20 +10,11 @@ import { TipoTransacao } from "@/shared/types/TipoTransacao";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store";
 import { novaTransacaoBanco, realizarDeposito } from "@/features/transactions/transactionSlice";
+import { FormularioPropsTransacao } from "@/shared/models/Formulario"
+import { TransacaoForm } from "@/shared/models/Transacao"
 
-// Define o tipo para os dados do formulário
-type TransacaoForm = {
-  tipoTransacao: string;
-  valor: number;
-  date: string;
-  anexo?: File;
-};
 
-type FormularioProps = {
-  userId: string | number;
-};
-
-export default function FormNovaTransacao({ userId }: FormularioProps) {
+export default function FormNovaTransacao({ userId }: FormularioPropsTransacao) {
   const fileUploaderRef = useRef<FileUploaderRef>();
   const dispatch = useDispatch<AppDispatch>();
   const [formData, setFormData] = useState<TransacaoForm>({
@@ -38,7 +29,7 @@ export default function FormNovaTransacao({ userId }: FormularioProps) {
     { value: "deposito", label: "Depósito" },
   ];
 
-  const saldoRedux = useSelector((state: any) => state.transaction.saldo); 
+  const saldoRedux = useSelector((state: any) => state.transaction.saldo);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -72,7 +63,7 @@ export default function FormNovaTransacao({ userId }: FormularioProps) {
 
     await dispatch(
       novaTransacaoBanco({
-        userId : Number(userId),
+        userId: Number(userId),
         tipoTransacao,
         valor,
         date,
@@ -81,24 +72,23 @@ export default function FormNovaTransacao({ userId }: FormularioProps) {
     ).unwrap();
 
     if (tipoTransacao === TipoTransacao.DEPOSITO) {
-     const novoSaldo : number = saldoRedux + valor
-     console.log("novo saldo para o realizar deposito",novoSaldo)
-           await dispatch(
-            realizarDeposito({userId : Number(userId),valor: novoSaldo})
-          );
-         }
-    else if (tipoTransacao === TipoTransacao.TRANSFERENCIA){
-      const novoSaldo : number = saldoRedux - valor
-      console.log("novo saldo para o realizar transferencia ",novoSaldo)
-      await dispatch(realizarDeposito({userId : Number(userId),valor: novoSaldo}))
-      
-    }  
-     else {
-           throw new Error("Tipo de Transação é inválido!");
-        }
+      const novoSaldo: number = saldoRedux + valor
+
+      await dispatch(
+        realizarDeposito({ userId: Number(userId), valor: novoSaldo })
+      );
+    }
+    else if (tipoTransacao === TipoTransacao.TRANSFERENCIA) {
+      const novoSaldo: number = saldoRedux - valor
+
+      await dispatch(realizarDeposito({ userId: Number(userId), valor: novoSaldo }))
+
+    }
+    else {
+      throw new Error("Tipo de Transação é inválido!");
+    }
   };
 
-  console.log("saldo redux formulario",saldoRedux)
   const resetForm = () => {
     setFormData({
       tipoTransacao: "deposito",

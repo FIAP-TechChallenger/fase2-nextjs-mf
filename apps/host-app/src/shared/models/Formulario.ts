@@ -13,3 +13,7 @@ export interface FormularioProps {
   novaTransacao: (tipo: string, valor: number, date: string, userId: number, anexo?: File) => void;
   userId: number;
 }
+export interface FormularioPropsTransacao  {
+  userId: string | number;
+};
+

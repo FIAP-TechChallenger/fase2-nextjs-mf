@@ -27,9 +27,6 @@ const initialState: TransacoesState = {
   saldo: 0,
 };
 
-
-
-// Thunks para ações assíncronas
 export const fetchDadosIniciais = createAsyncThunk(
   'transacoes/fetchDadosIniciais',
   async (userId: number) => {
@@ -52,7 +49,7 @@ export const atualizarTransacoes = createAsyncThunk(
 export const atualizarSaldo = createAsyncThunk(
   'transacoes/atualizarSaldo',
   async (userId: number) => {
-    const saldoResult = await getSaldo(userId);
+    const saldoResult = await getSaldo(userId);   
     return { saldo: saldoResult };
   }
 )
@@ -64,8 +61,8 @@ export const realizarDeposito = createAsyncThunk(
     { dispatch }
   ) => {
 
-    await postSaldo(userId, valor); // Atualiza o saldo no banco
-    const saldoAtualizado = await getSaldo(userId); // Busca o saldo atualizado
+    await postSaldo(userId, valor); 
+    const saldoAtualizado = await getSaldo(userId); 
     dispatch(atualizarSaldoGlobal(saldoAtualizado)); // Atualiza no Redux imediatamente
   }
 );
@@ -77,8 +74,8 @@ export const realizarTransferencia = createAsyncThunk(
     { dispatch }
   ) => {
 
-    await postSaldo(userId, valor); // Atualiza o saldo no banco
-    const saldoAtualizado = await getSaldo(userId); // Busca o saldo atualizado
+    await postSaldo(userId, valor); 
+    const saldoAtualizado = await getSaldo(userId); 
     dispatch(atualizarSaldoGlobal(saldoAtualizado)); // Atualiza no Redux imediatamente
   }
 );
@@ -93,27 +90,28 @@ export const novaTransacaoBanco = createAsyncThunk(
     const result = await postTransacao(transacao);
 
     if (result) {
-      await dispatch(atualizarTransacoes(userId));
-
+      const { payload: transacoesAtualizadas } = await dispatch(atualizarTransacoes(userId));
+      return transacoesAtualizadas; 
     }
+   
   }
 
 );
-
-
 export const atualizarTransacaoBanco = createAsyncThunk(
   'transacoes/atualizarTransacaoBanco',
   async (
-    { transacaoId, tipoTransacao, valor, date, anexo }: { transacaoId: number; tipoTransacao: string; valor: number; date: string; anexo?: File },
+    { transacaoId, tipoTransacao, valor, date, anexo, userId }: { transacaoId: number; tipoTransacao: string; valor: number; date: string; anexo?: File ; userId: number},
     { dispatch }
   ) => {
     const transacaoAtualizada = { transacaoId, tipoTransacao, valor, date, anexo };
     const result = await putTransacoes(transacaoAtualizada);
 
     if (result) {
-     
-
+      await dispatch(atualizarSaldo(userId));
+      await dispatch(atualizarTransacoes(userId));
     }
+    return result
+    
   }
 
 )
@@ -140,7 +138,7 @@ const transactionSlice = createSlice({
         state.transacoes = action.payload.transacoes;
       })
       .addCase(fetchDadosIniciais.rejected, (state, action) => {
-        console.error('Erro ao buscar dados iniciais:', action.error.message);
+        console.error('Erro ao buscar dados iniciais:', action.error.message, state);
       })
       .addCase(atualizarTransacoes.fulfilled, (state, action) => {
         state.transacoes = action.payload.transacoes;

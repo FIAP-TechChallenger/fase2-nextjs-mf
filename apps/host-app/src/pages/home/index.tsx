@@ -5,9 +5,22 @@ import CardNovaTransacao from "@/components/layout/transacao/CardNovaTransacao";
 import Extrato from "@/components/layout/transacao/Extrato";
 import Saldo from "@/components/layout/transacao/Saldo";
 import LayoutLogado from "@/components/layout/LayoutLogado";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
+import { AppDispatch } from "@/store";
+import { fetchDadosIniciais } from "@/features/transactions/transactionSlice";
 
 export default function Index() {
+    const { data: session } = useSession();
+    const dispatch = useDispatch<AppDispatch>();
+    const userId = Number(session?.user.id)
+
+    useEffect(() => {
+      if (session?.user?.id) {
+        dispatch(fetchDadosIniciais(session.user.id));
+      }
+    }, [session?.user?.id, dispatch]);
   
   return (
     <LayoutLogado>
@@ -15,7 +28,7 @@ export default function Index() {
         <Aside removeOnMobile={true} />
         <div className="flex flex-col w-full lg:max-w-[690px] h-max gap-8">
           <Saldo />
-          <CardNovaTransacao />
+          <CardNovaTransacao userId={userId} />
         </div>
         <Extrato />
       </div>

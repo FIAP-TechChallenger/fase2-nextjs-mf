@@ -13,24 +13,18 @@ import { atualizarSaldo, fetchDadosIniciais } from "@/features/transactions/tran
 
 export default function Saldo() {
   const { data: session } = useSession();
-  const { saldo } = useTransacoesContext();
   const date: string = formatarData(new Date(), FormatoData.DIA_SEMANA_DIA_MES_ANO);
-  const saldoFormato = formatarMoeda(saldo || 0);
+  const dispatch = useDispatch<AppDispatch>();
+  const saldoRedux = useSelector((state: any) => state.transaction.saldo);
+  const saldoReduxFormato = formatarMoeda(saldoRedux || 0);
 
-  // Configuração do Redux
-  const dispatch = useDispatch<AppDispatch>(); // Tipagem para o Dispatch
-  const saldoRedux = useSelector((state: any) => state.transaction.saldo); // Obtenha o saldo do Redux
-  const saldoReduxFormato = formatarMoeda(saldoRedux || 0); // Formatação do saldo do Redux
-  
-  useEffect(() => {
-    if (session?.user?.id) {
-      dispatch(fetchDadosIniciais(session.user.id));
-    }
-  }, [session?.user?.id, dispatch]);
+  // useEffect(() => {
+  //   if (session?.user?.id) {
+  //     dispatch(fetchDadosIniciais(session.user.id));
+  //   }
+  // }, [session?.user?.id, dispatch]);
 
-  console.log ("saldo redux em saldo ", saldoRedux)
 
-    
   useEffect(() => {
     if (session?.user?.id) {
       dispatch(atualizarSaldo(session.user.id));
