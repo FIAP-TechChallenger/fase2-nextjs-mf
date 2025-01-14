@@ -5,3 +5,5 @@ FROM postgres:latest
 ENV POSTGRES_USER=postgres
 ENV POSTGRES_PASSWORD=ffase2-microfrontend
 ENV POSTGRES_DB=fiap-fase2-microfront
+
+EXPOSE 5432

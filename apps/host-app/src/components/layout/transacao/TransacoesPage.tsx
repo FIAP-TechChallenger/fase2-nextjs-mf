@@ -57,7 +57,7 @@ export default function TransacoesPage() {
             label="Data início:"
             labelTextBold={false}
             name="dataInicio"
-            onValueChanged={(value) => setDataInicio(value)}
+            onValueChanged={(value) => setDataInicio(value as string)}
           />
           <Input
             type="date"
@@ -65,7 +65,7 @@ export default function TransacoesPage() {
             label="Data fim:"
             labelTextBold={false}
             name="dataFim"
-            onValueChanged={(value) => setDataFim(value)}
+            onValueChanged={(value) => setDataFim(value as string)}
           />
         </div>
       </div>

@@ -5,7 +5,10 @@
   ],
   "scripts": {
     "up-all": "docker-compose -f ./Docker/docker-compose.yml up",
-    "up-db": "docker-compose -f ./Docker/docker-compose.yml up -d db"
+    "up-db": "docker-compose -f ./Docker/docker-compose.yml up -d db",
+    "docker:build-host": "docker build -f ./Docker/Dockerfile-HostApp -t fiap-fase2-mf-host .",
+    "docker:host-mark-aws": "docker tag fiap-fase2-mf-host:latest 966073448937.dkr.ecr.us-east-1.amazonaws.com/fiap-fase2-mf-host:latest",
+    "docker:host-send-aws": "docker push 966073448937.dkr.ecr.us-east-1.amazonaws.com/fiap-fase2-mf-host:latest"
   },
   "devDependencies": {
     "npx": "^10.2.2",
