@@ -1,16 +1,19 @@
 {
   "workspaces": [
-    "apps/host-app",
     "libs/*"
   ],
   "scripts": {
     "up-all": "docker-compose -f ./Docker/docker-compose.yml up",
     "up-db": "docker-compose -f ./Docker/docker-compose.yml up -d db",
-    "docker:build-host": "docker build -f ./Docker/Dockerfile-HostApp -t fiap-fase2-mf-host .",
+    "docker:build-host": "docker build -f ./Docker/Dockerfile-HostApp --build-arg REMOTE_APP_HOST=fiap-fase2-mf-remote -t fiap-fase2-mf-host .",
     "docker:host-mark-aws": "docker tag fiap-fase2-mf-host:latest 966073448937.dkr.ecr.us-east-1.amazonaws.com/fiap-fase2-mf-host:latest",
-    "docker:host-send-aws": "docker push 966073448937.dkr.ecr.us-east-1.amazonaws.com/fiap-fase2-mf-host:latest"
+    "docker:host-send-aws": "docker push 966073448937.dkr.ecr.us-east-1.amazonaws.com/fiap-fase2-mf-host:latest",
+    "docker:build-remote": "docker build -f ./Docker/Dockerfile-Remote -t fiap-fase2-mf-remote .",
+    "docker:remote-mark-aws": "docker tag fiap-fase2-mf-remote:latest 966073448937.dkr.ecr.us-east-1.amazonaws.com/fiap-fase2-mf-remote:latest",
+    "docker:remote-send-aws": "docker push 966073448937.dkr.ecr.us-east-1.amazonaws.com/fiap-fase2-mf-remote:latest"
   },
   "devDependencies": {
+    "dotenv": "^16.4.7",
     "npx": "^10.2.2",
     "prisma": "^6.1.0"
   },

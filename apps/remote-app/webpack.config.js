@@ -3,7 +3,7 @@ const { ModuleFederationPlugin } = require("@module-federation/enhanced");
 const path = require("path");
 
 module.exports = {
-  entry: "./src/index",
+  entry: "./src/index.tsx",
   mode: "development",
   devServer: {
     headers: {
@@ -14,13 +14,22 @@ module.exports = {
     static: {
       directory: path.join(__dirname, "dist"),
     },
-    port: 3001,
+    port: 3002,
+    // host: process.env.REMOTE_APP_HOST || "localhost", // Host configurável via .env
   },
   output: {
-    publicPath: "http://localhost:3001/",
+    publicPath: `http://localhost:3002/`,
+  },
+  resolve: {
+    extensions: [".tsx", ".ts", ".js"],
   },
   module: {
     rules: [
+      {
+        test: /\.tsx?$/,
+        use: "ts-loader",
+        exclude: /node_modules/,
+      },
       {
         test: /\.jsx?$/,
         loader: "babel-loader",
@@ -37,7 +46,7 @@ module.exports = {
       library: { type: "var", name: "remote" },
       filename: "remote.js",
       exposes: {
-        "./CardNovoInvestimento": "./src/CardNovoInvestimento",
+        "./CardNovoInvestimento": "./src/CardNovoInvestimento.tsx",
       },
       shared: {
         "@stitches/react": {
@@ -45,13 +54,11 @@ module.exports = {
         },
         react: {
           singleton: true,
-          version: "0",
           requiredVersion: false,
         },
         "react-dom": {
           requiredVersion: false,
           singleton: true,
-          version: "0",
         },
       },
     }),

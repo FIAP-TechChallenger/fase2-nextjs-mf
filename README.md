@@ -106,24 +106,32 @@ cd apps/host-app
 npm run dev
 ```
 
-O servidor de desenvolvimento do Next.js será iniciado, e o aplicativo estará disponível em [http://localhost:3000](http://localhost:3000).
+O servidor será iniciado e estará disponível em [http://localhost:3000](http://localhost:3000).
 
 ---
 
-### 5. Iniciar o Aplicativo Remoto Investimentos
+### 5. Iniciar o Aplicativo Remoto
 
-Depois de configurar o ambiente, inicie o aplicativo remoto dos investimentos:
+Depois de configurar o ambiente, inicie o aplicativo remoto:
 
-#### Navegue até a pasta do investimentos:
+#### Navegue até a pasta do remote-app:
 
 ```bash
-cd apps/investimentos
+cd apps/remote-app
 ```
 
-#### Inicie o servidor de desenvolvimento:
+#### Inicie o servidor
+
+- Desenvolvimento:
 
 ```bash
 npm run dev
 ```
 
-O servidor de desenvolvimento do Angular será iniciado, e o aplicativo estará disponível em [http://localhost:3001](http://localhost:3001).
+- Produção:
+
+```bash
+npm run serve
+```
+
+O servidor será iniciado e estará disponível em [http://localhost:3002](http://localhost:3002).

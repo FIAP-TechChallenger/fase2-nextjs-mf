@@ -1,5 +1,6 @@
 const { NextFederationPlugin } = require("@module-federation/nextjs-mf");
 const path = require("path");
+require("dotenv").config();
 
 module.exports = {
   webpack(config, options) {
@@ -31,7 +32,7 @@ module.exports = {
         new NextFederationPlugin({
           name: "host",
           remotes: {
-            remote: "remote@http://localhost:3001/remote.js",
+            remote: `remote@http://${process.env.REMOTE_APP_HOST || "localhost"}:3002/remote.js`,
           },
           filename: "static/chunks/remoteEntry.js",
         })
