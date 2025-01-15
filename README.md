@@ -7,13 +7,13 @@ Banco de Dados Postgres
 ## Estrutura do Projeto
 
 - **apps/host-app**: Contém o aplicativo host.
-- **apps/investimentos**: Contém o aplicativo remoto para os investimentos.
+- **apps/remote-app**: Contém o aplicativo remoto para os investimentos.
 - **libs/db**: Contém os esquemas e a configuração do Prisma.
 - **Docker**: Contém os arquivos de configuração do Docker Compose.
 
 ---
 
-## Inicialização em Produção
+## Inicialização para apenas rodar o projeto
 
 ### 1. Iniciar Containers
 
@@ -30,11 +30,11 @@ Acesse a aplicação host na url em [http://localhost:3000](http://localhost:300
 
 ---
 
-## Inicialização para Desenvolvimento
+## Inicialização para desenvolver
 
 ### 1. Instalar dependências
 
-Antes de qualquer coisa, instale as dependências necessárias para o projeto.
+Antes de qualquer coisa, instale as dependências da raiz, host-app e remote-app.
 
 ```bash
 npm install
@@ -42,13 +42,13 @@ npm install
 
 ---
 
-### 2. Iniciar Containers
+### 2. Iniciar Banco de dados
 
 Certifique-se de que o Docker esteja instalado e em execução no seu sistema.
 
-#### Suba os containers do Docker:
+#### Suba o container do Docker:
 
-Execute o comando abaixo para iniciar o banco de dados definido em `./Docker/docker-compose.yml`.
+Execute o comando abaixo para iniciar o banco de dados definido em `./Docker/Dockerfile-Postgres`.
 
 ```bash
 npm run up-db
