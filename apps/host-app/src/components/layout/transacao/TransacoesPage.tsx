@@ -15,18 +15,12 @@ import { ButtonColors } from "@/shared/types/Button";
 import Input from "@/components/forms/Input";
 import ListaTransacoes from "./ListaTransacoes";
 
-export default function TransacoesPage() {
+export default function TransacoesPage({userId }: any) {
+  
   const dispatch: AppDispatch = useDispatch();
-
-
   const { transacoesFiltradas, tipoFiltroTransacao, dataInicio, dataFim } = useSelector(
     (state: RootState) => state.filterTransaction
   );
-
-  useEffect(()=>{
-    
-
-  },[transacoesFiltradas])
 
   const transacoes = useSelector((state: RootState) => state.filterTransaction.transacoesFiltradas);
   console.log('transaçoes em transaçoes page', transacoes)
@@ -101,7 +95,7 @@ export default function TransacoesPage() {
         </div>
       </div>
 
-      <ListaTransacoes transacoes={transacoes} showActions={true} />
+      <ListaTransacoes transacoes={transacoesFiltradas} showActions={true} userId = {userId}/>
     </div>
   );
 }

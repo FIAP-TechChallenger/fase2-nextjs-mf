@@ -7,7 +7,6 @@ import {
   postTransacao,
   putTransacoes,
 } from '../../services/transacoesServices';
-import { useSession } from 'next-auth/react';
 
 interface Transacao {
   userId: number;
@@ -79,6 +78,19 @@ export const realizarTransferencia = createAsyncThunk(
     dispatch(atualizarSaldoGlobal(saldoAtualizado)); // Atualiza no Redux imediatamente
   }
 );
+
+export const deletarTransacao = createAsyncThunk(
+  'transacoes/deletarTransacao',
+  async ({ transacaoId, userId }: { transacaoId: number; userId: number }, { dispatch }) => {
+    const deletarTransacao = await DeleteTransacao(transacaoId);
+
+    if (deletarTransacao) {
+      await dispatch(atualizarSaldo(userId));
+      await dispatch(atualizarTransacoes(userId));
+    }
+  }
+);
+
 
 export const novaTransacaoBanco = createAsyncThunk(
   'transacoes/novaTransacaoBanco',

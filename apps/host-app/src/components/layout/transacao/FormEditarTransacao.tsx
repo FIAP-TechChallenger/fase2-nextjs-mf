@@ -1,6 +1,5 @@
 "use client";
 
-import { useTransacoesContext } from "@/context/TransacoesContext";
 import { FormEditarTransacaoProps } from "@/shared/models/Formulario";
 import Input from "@/components/forms/Input";
 import InputSelect from "@/components/forms/InputSelect";
@@ -10,7 +9,7 @@ import { useRef, useState } from "react";
 import FileUploader, { FileUploaderRef } from "@/components/forms/FileUploader";
 import TransacaoAnexoDownload from "./TransacaoAnexoDownload";
 import InputLabel from "@/components/forms/InputLabel";
-import {Transacao }from '../../../shared/models/Transacao'
+import { Transacao } from '../../../shared/models/Transacao'
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 import { useSession } from "next-auth/react";
@@ -19,15 +18,8 @@ import { atualizarTransacaoBanco } from "@/features/transactions/transactionSlic
 export default function FormEditarTransacao(options: FormEditarTransacaoProps) {
   const fileUploaderRef = useRef<FileUploaderRef>();
   const [formData, setFormData] = useState<Transacao>(options.transacao);
-  const {data: session} = useSession();
+  const { data: session } = useSession();
   const user = session?.user;
-
-
-  // const listaTransacoes = useSelector((state : any)=> state.transaction.transacoes);
-  // console.log("lista de transacoes form nova transacaoS",listaTransacoes) 
-  // const saldo = useSelector((state : any)=> state.transaction.saldo);
-  // console.log("saldo form editar transaçao",saldo)
-
   const dispatch = useDispatch<AppDispatch>();
 
   const tiposTransacao: InputSelectOption[] = [
@@ -58,12 +50,11 @@ export default function FormEditarTransacao(options: FormEditarTransacaoProps) {
       alert("Dados inválidos! Verifique os campos.");
       return;
     }
-     confirmarTransacao();
-    // console.log("lista de transacoes form nova transacao depois ",listaTransacoes) 
+    confirmarTransacao();
   };
 
- 
-   const confirmarTransacao = async () => {
+
+  const confirmarTransacao = async () => {
     const { tipoTransacao, valor, date, anexo } = formData;
     const result = await dispatch(
       atualizarTransacaoBanco({
@@ -75,11 +66,9 @@ export default function FormEditarTransacao(options: FormEditarTransacaoProps) {
         userId: user?.id || 0,
       })
     );
-    console.log("result", result);
-    console.log("", );
-
-     if (options.onConfirmClicked) options.onConfirmClicked();
-   };
+    
+    if (options.onConfirmClicked) options.onConfirmClicked();
+  };
 
   const isFormValid = () => {
     const { tipoTransacao, valor, date } = formData;
