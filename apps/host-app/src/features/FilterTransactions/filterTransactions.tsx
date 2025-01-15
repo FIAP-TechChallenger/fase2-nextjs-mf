@@ -56,6 +56,8 @@ const filtrosTransacoesSlice = createSlice({
       // Atualiza as transações filtradas
       state.transacoesFiltradas = action.payload.transacoes;
     });
+   
+    
 
   },
 });

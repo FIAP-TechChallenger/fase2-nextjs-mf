@@ -9,11 +9,12 @@ import { useRef, useState } from "react";
 import FileUploader, { FileUploaderRef } from "@/components/forms/FileUploader";
 import TransacaoAnexoDownload from "./TransacaoAnexoDownload";
 import InputLabel from "@/components/forms/InputLabel";
-import { Transacao } from '../../../shared/models/Transacao'
-import { useDispatch } from "react-redux";
+import { Transacao } from "@/shared/models/Transacao";
+import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store";
 import { useSession } from "next-auth/react";
 import { atualizarTransacaoBanco } from "@/features/transactions/transactionSlice";
+import { TipoTransacao } from "@/shared/types/TipoTransacao";
 
 export default function FormEditarTransacao(options: FormEditarTransacaoProps) {
   const fileUploaderRef = useRef<FileUploaderRef>();
@@ -21,6 +22,8 @@ export default function FormEditarTransacao(options: FormEditarTransacaoProps) {
   const { data: session } = useSession();
   const user = session?.user;
   const dispatch = useDispatch<AppDispatch>();
+
+  const saldoRedux = useSelector((state: any) => state.transaction.saldo);
 
   const tiposTransacao: InputSelectOption[] = [
     { value: "", label: "Selecione o Tipo" },
@@ -35,6 +38,7 @@ export default function FormEditarTransacao(options: FormEditarTransacaoProps) {
   function onAnexoRemoved() {
     setFormData({ ...formData, anexoName: undefined });
   }
+
   const handleChange = (name: string, value: string | number) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -53,20 +57,56 @@ export default function FormEditarTransacao(options: FormEditarTransacaoProps) {
     confirmarTransacao();
   };
 
+  function verificaTransacao(
+    saldo: number,
+    valor: number,
+    tipoTransacao: string,
+    valorOriginal: number
+  ): boolean {
+    const saldoAjustado = saldo + valorOriginal; 
+
+    if (tipoTransacao === TipoTransacao.TRANSFERENCIA && valor > saldoAjustado) {
+      return false;
+    }
+    if (tipoTransacao === TipoTransacao.DEPOSITO && valor <= 0) {
+      return false;
+    }
+
+    return true;
+  }
 
   const confirmarTransacao = async () => {
     const { tipoTransacao, valor, date, anexo } = formData;
-    const result = await dispatch(
-      atualizarTransacaoBanco({
-        transacaoId: Number(options.transacao.id),
-        tipoTransacao,
-        valor,
-        date,
-        anexo,
-        userId: user?.id || 0,
-      })
-    );
-    
+
+    const valorOriginal = options.transacao.valor;
+
+    if (!verificaTransacao(saldoRedux, valor, tipoTransacao, valorOriginal)) {
+      alert("Impossível realizar essa atualização. Seu saldo ficaria negativo.");
+      return;
+    }
+
+    try {
+      const result = await dispatch(
+        atualizarTransacaoBanco({
+          transacaoId: Number(options.transacao.id),
+          tipoTransacao,
+          valor,
+          date,
+          anexo,
+          userId: user?.id || 0,
+        })
+      );
+
+      if (result.meta.requestStatus === "fulfilled") {
+        alert("Transação atualizada com sucesso!");
+      } else {
+        alert("Erro ao atualizar a transação.");
+      }
+    } catch (error) {
+      console.error("Erro ao confirmar transação:", error);
+      alert("Erro ao realizar a operação. Tente novamente.");
+    }
+
     if (options.onConfirmClicked) options.onConfirmClicked();
   };
 
@@ -87,53 +127,57 @@ export default function FormEditarTransacao(options: FormEditarTransacaoProps) {
   };
 
   return (
-    <>
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-        <InputSelect
-          name="tipoTransacao"
-          label="Tipo"
-          options={tiposTransacao}
-          style="dark"
-          value={formData.tipoTransacao}
-          onValueChanged={(value) => handleChange("tipoTransacao", value)}
-        />
-        <Input
-          name="valor"
-          type="number"
-          label="Valor"
-          style="dark"
-          value={formData.valor}
-          onValueChanged={(value) => handleChange("valor", Number(value))}
-        />
-        <Input
-          name="date"
-          type="date"
-          label="Data"
-          style="dark"
-          value={formData.date}
-          onValueChanged={(value) => handleChange("date", value)}
-        />
-        <FileUploader
-          ref={fileUploaderRef}
-          name="anexo"
-          label={formData.anexoName ? "Alterar anexo" : "Anexo"}
-          style="dark"
-          accept="image/*,application/pdf,.docx,.xlsx"
-          onValueChanged={(value) => handleChange("anexo", value)}
-        />
+    <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+      <InputSelect
+        name="tipoTransacao"
+        label="Tipo"
+        options={tiposTransacao}
+        style="dark"
+        value={formData.tipoTransacao}
+        onValueChanged={(value) => handleChange("tipoTransacao", value)}
+      />
+      <Input
+        name="valor"
+        type="number"
+        label="Valor"
+        style="dark"
+        value={formData.valor}
+        onValueChanged={(value) => handleChange("valor", Number(value))}
+      />
+      <Input
+        name="date"
+        type="date"
+        label="Data"
+        style="dark"
+        value={formData.date}
+        onValueChanged={(value) => handleChange("date", value)}
+      />
+      <FileUploader
+        ref={fileUploaderRef}
+        name="anexo"
+        label={formData.anexoName ? "Alterar anexo" : "Anexo"}
+        style="dark"
+        accept="image/*,application/pdf,.docx,.xlsx"
+        onValueChanged={(value) => handleChange("anexo", value)}
+      />
 
-        {formData.anexoName && (
-          <div className="flex flex-col">
-            <InputLabel text="Anexo salvo"></InputLabel>
-            <TransacaoAnexoDownload displayType="anexoName" item={formData} onRemoveAnexo={onAnexoRemoved} />
-          </div>
-        )}
-
-        <div className="flex gap-4">
-          {options.showCancel && <Button type="button" text="Cancelar" color="red" onClick={onCancelClicked} />}
-          <Button type="submit" text="Atualizar transação" color="blue" />
+      {formData.anexoName && (
+        <div className="flex flex-col">
+          <InputLabel text="Anexo salvo" />
+          <TransacaoAnexoDownload
+            displayType="anexoName"
+            item={formData}
+            onRemoveAnexo={onAnexoRemoved}
+          />
         </div>
-      </form>
-    </>
+      )}
+
+      <div className="flex gap-4">
+        {options.showCancel && (
+          <Button type="button" text="Cancelar" color="red" onClick={onCancelClicked} />
+        )}
+        <Button type="submit" text="Atualizar transação" color="blue" />
+      </div>
+    </form>
   );
 }

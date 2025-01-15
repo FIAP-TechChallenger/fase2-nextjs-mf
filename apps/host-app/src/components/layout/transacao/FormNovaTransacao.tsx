@@ -41,6 +41,7 @@ export default function FormNovaTransacao({ userId }: FormularioPropsTransacao) 
     try {
       await processarTransacao();
       resetForm();
+
     } catch (error) {
       console.error("Erro ao adicionar transação:", error);
       alert("Erro ao adicionar transação. Tente novamente mais tarde.");
@@ -61,17 +62,17 @@ export default function FormNovaTransacao({ userId }: FormularioPropsTransacao) 
       throw new Error("Usuário inválido!");
     }
 
-    await dispatch(
-      novaTransacaoBanco({
-        userId: Number(userId),
-        tipoTransacao,
-        valor,
-        date,
-        anexo,
-      })
-    ).unwrap();
-
     if (tipoTransacao === TipoTransacao.DEPOSITO) {
+      await dispatch(
+        novaTransacaoBanco({
+          userId: Number(userId),
+          tipoTransacao,
+          valor,
+          date,
+          anexo,
+        })
+      ).unwrap();
+
       const novoSaldo: number = saldoRedux + valor
 
       await dispatch(
@@ -79,15 +80,39 @@ export default function FormNovaTransacao({ userId }: FormularioPropsTransacao) 
       );
     }
     else if (tipoTransacao === TipoTransacao.TRANSFERENCIA) {
-      const novoSaldo: number = saldoRedux - valor
+      if (verificaSaldo(valor)) {
 
-      await dispatch(realizarDeposito({ userId: Number(userId), valor: novoSaldo }))
+        await dispatch(
+          novaTransacaoBanco({
+            userId: Number(userId),
+            tipoTransacao,
+            valor,
+            date,
+            anexo,
+          })
+        ).unwrap();
 
+        const novoSaldo: number = saldoRedux - valor
+
+        await dispatch(realizarDeposito({ userId: Number(userId), valor: novoSaldo }))
+      }
+      else {
+        alert("Impossivel realizar essa transferencia seu saldo ficara negativo ")
+      }
     }
     else {
       throw new Error("Tipo de Transação é inválido!");
     }
   };
+
+  const verificaSaldo = (valor: number): boolean => {
+    if (valor > saldoRedux) {
+      return false;
+    }
+    return true;
+  };
+
+
 
   const resetForm = () => {
     setFormData({

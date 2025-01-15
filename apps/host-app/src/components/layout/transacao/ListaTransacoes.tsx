@@ -35,8 +35,8 @@ export default function ListaTransacoes(options: ListaTransacoesOptions) {
     if (transacaoSelecionada) {
       dispatch(
         deletarTransacao({
-          transacaoId: Number(transacaoSelecionada.id), // Propriedade explícita
-          userId: options.userId, // Propriedade explícita
+          transacaoId: Number(transacaoSelecionada.id), 
+          userId: options.userId, 
         })
       );
       fecharModal();
