@@ -1,5 +1,9 @@
-# Primeiro estágio: Builder
-FROM node:20-alpine AS builder
+FROM node:20-alpine 
+
+# Define um argumento para o build
+ARG REMOTE_APP_HOST
+# Exporta o argumento como variável de ambiente
+ENV REMOTE_APP_HOST=${REMOTE_APP_HOST}
 
 WORKDIR /app
 
@@ -16,9 +20,11 @@ RUN npx prisma generate --schema=./libs/db/prisma/schema.prisma
 
 # Mude para o diretório do host-app
 WORKDIR /app/apps/host-app
+# Instala dependências
+RUN npm install
 
 # Constrói o app Next.js para produção
-RUN npm run build
+RUN REMOTE_APP_HOST=${REMOTE_APP_HOST} npm run build
 
 # Expõe a porta da aplicação
 EXPOSE 3000
