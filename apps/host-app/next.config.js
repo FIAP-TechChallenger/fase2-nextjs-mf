@@ -32,7 +32,7 @@ module.exports = {
         new NextFederationPlugin({
           name: "host",
           remotes: {
-            remote: `remote@http://${process.env.REMOTE_APP_HOST || "localhost"}:3002/remote.js`,
+            remote: `remote@http://${process.env.REMOTE_APP_HOST || "localhost"}:3002/remoteEntry.js`,
           },
           filename: "static/chunks/remoteEntry.js",
         })

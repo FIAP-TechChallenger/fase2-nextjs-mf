@@ -1,33 +1,26 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { ModuleFederationPlugin } = require("@module-federation/enhanced");
+const { ModuleFederationPlugin } = require("webpack").container;
 const path = require("path");
+const deps = require("./package.json").dependencies;
 
 module.exports = {
-  entry: "./src/index.tsx",
+  entry: "./src/index.ts",
   mode: "development",
   devServer: {
+    port: 3002,
+    open: true,
     headers: {
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-      "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization",
     },
-    static: {
-      directory: path.join(__dirname, "dist"),
-    },
-    port: 3002,
-    // host: process.env.REMOTE_APP_HOST || "localhost", // Host configurável via .env
-  },
-  output: {
-    publicPath: `http://localhost:3002/`,
   },
   resolve: {
-    extensions: [".tsx", ".ts", ".js"],
+    extensions: [".ts", ".tsx", ".js"],
   },
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
-        use: "ts-loader",
+        test: /\.(js|jsx|tsx|ts)$/,
+        loader: "ts-loader",
         exclude: /node_modules/,
       },
       {
@@ -43,22 +36,17 @@ module.exports = {
   plugins: [
     new ModuleFederationPlugin({
       name: "remote",
-      library: { type: "var", name: "remote" },
-      filename: "remote.js",
+      filename: "remoteEntry.js",
       exposes: {
-        "./CardNovoInvestimento": "./src/CardNovoInvestimento.tsx",
+        // expose each component
+        "./CardNovoInvestimento": "./src/components/CardNovoInvestimento",
       },
       shared: {
-        "@stitches/react": {
-          singleton: true,
-        },
-        react: {
-          singleton: true,
-          requiredVersion: false,
-        },
+        ...deps,
+        react: { singleton: true, requiredVersion: deps.react },
         "react-dom": {
-          requiredVersion: false,
           singleton: true,
+          requiredVersion: deps["react-dom"],
         },
       },
     }),
