@@ -1,6 +1,6 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Transacao } from '@/shared/models/Transacao';
-import { atualizarTransacaoBanco, atualizarTransacoes, fetchDadosIniciais } from '../transactions/transactionSlice';
+import { atualizarTransacoes, fetchDadosIniciais } from '../transactions/transactionSlice';
 
 interface FiltrosTransacoesState {
   todasTransacoes: Transacao[];
@@ -31,7 +31,7 @@ const filtrosTransacoesSlice = createSlice({
     setDataFim(state, action: PayloadAction<string>) {
       state.dataFim = action.payload;
     },
-    filtrarTransacoes(state) {
+    atualizarTransacoesFiltradas(state) {
       const dataFinal = state.dataFim ? new Date(state.dataFim) : new Date();
 
       state.transacoesFiltradas = state.todasTransacoes.filter((transacao) => {
@@ -47,18 +47,27 @@ const filtrosTransacoesSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchDadosIniciais.fulfilled, (state, action) => {
-      state.todasTransacoes = action.payload.transacoes;
-      state.transacoesFiltradas = action.payload.transacoes; 
-    });
-
-    builder.addCase(atualizarTransacoes.fulfilled, (state, action) => {
-      // Atualiza as transações filtradas
-      state.transacoesFiltradas = action.payload.transacoes;
-    });
-   
-    
-
+    builder
+      .addCase(fetchDadosIniciais.fulfilled, (state, action) => {
+        state.todasTransacoes = action.payload.transacoes;
+      })
+      .addCase(atualizarTransacoes.fulfilled, (state, action) => {
+        state.todasTransacoes = action.payload.transacoes;
+      })
+      .addMatcher(
+        (action) =>
+          ['filtrosTransacoes/setTipoFiltroTransacao', 'filtrosTransacoes/setDataInicio', 'filtrosTransacoes/setDataFim'].includes(
+            action.type
+          ),
+        (state) => {
+          // Atualiza as transações filtradas automaticamente ao alterar os filtros
+          filtrosTransacoesSlice.caseReducers.atualizarTransacoesFiltradas(state);
+        }
+      )
+      .addDefaultCase((state) => {
+        // Sempre que as transações são atualizadas, reprocessar os filtros
+        filtrosTransacoesSlice.caseReducers.atualizarTransacoesFiltradas(state);
+      });
   },
 });
 
@@ -66,7 +75,7 @@ export const {
   setTipoFiltroTransacao,
   setDataInicio,
   setDataFim,
-  filtrarTransacoes,
+  atualizarTransacoesFiltradas,
 } = filtrosTransacoesSlice.actions;
 
 export default filtrosTransacoesSlice.reducer;

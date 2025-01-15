@@ -7,7 +7,7 @@ import {
   setTipoFiltroTransacao,
   setDataInicio,
   setDataFim,
-  filtrarTransacoes,
+  atualizarTransacoesFiltradas,
 } from "@/features/FilterTransactions/filterTransactions";
 import { TiposTransacao } from "@/shared/types/TipoTransacao";
 import Button from "@/components/ui/Button";
@@ -26,7 +26,7 @@ export default function TransacoesPage({userId }: any) {
   console.log('transaçoes em transaçoes page', transacoes)
 
   const handleFiltrarTransacoes = () => {
-    dispatch(filtrarTransacoes());
+    dispatch( atualizarTransacoesFiltradas());
   };
 
   function getFiltroTipoButtonColor(tipo: TiposTransacao): ButtonColors {
