@@ -2,8 +2,14 @@ import { ApexOptions } from "apexcharts";
 import React from "react";
 import Chart from "react-apexcharts";
 
+interface Investimento {
+  tipo: string;
+  descricao: string;
+  valor: number;
+}
+
 export const CardNovoInvestimento: React.FC = () => {
-  var investimentos = [
+  var investimentos: Investimento[] = [
     { tipo: "Fundos de investimentos", descricao: "Investimentos em fundos variados", valor: 25000 },
     { tipo: "Tesouro direto", descricao: "Títulos do governo federal", valor: 27000 },
     { tipo: "Previdência Privada", descricao: "Planos de previdência", valor: 23000 },
