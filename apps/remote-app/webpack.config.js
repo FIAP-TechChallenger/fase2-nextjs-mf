@@ -24,12 +24,8 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.jsx?$/,
-        loader: "babel-loader",
-        exclude: /node_modules/,
-        options: {
-          presets: ["@babel/preset-react"],
-        },
+        test: /\.css$/, // Carrega os estilos do Tailwind
+        use: ["style-loader", "css-loader", "postcss-loader"],
       },
     ],
   },

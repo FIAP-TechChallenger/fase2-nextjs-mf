@@ -6,14 +6,20 @@ import Image from "next/image";
 import Icon from "@/components/ui/Icon";
 import { useState } from "react";
 import Aside from "./Aside";
-import {HeaderLogadoOptions} from '../../shared/models/Header'
-
+import { HeaderLogadoOptions } from "../../shared/models/Header";
+import { useRouter } from "next/navigation";
 
 export default function HeaderLogado(options: HeaderLogadoOptions) {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+
+  const deslogar = async () => {
+    await signOut({ redirect: false });
+    router.push("/");
   };
 
   return (
@@ -25,12 +31,7 @@ export default function HeaderLogado(options: HeaderLogadoOptions) {
           </button>
         </div>
 
-        <Button
-          className="max-sm:hidden"
-          text="Sair"
-          color="green"
-          onClick={() => signOut({ callbackUrl: "/" })}
-        ></Button>
+        <Button className="max-sm:hidden" text="Sair" color="green" onClick={deslogar}></Button>
 
         <div className="flex items-center">
           <span className="pr-4 max-sm:hidden">{options.userName}</span>
@@ -49,7 +50,7 @@ export default function HeaderLogado(options: HeaderLogadoOptions) {
           </div>
 
           <div className="px-4 py-5 w-full">
-            <Button className="w-full" text="Sair" color="green" onClick={() => signOut({ callbackUrl: "/" })}></Button>
+            <Button className="w-full" text="Sair" color="green" onClick={deslogar}></Button>
           </div>
         </div>
       )}

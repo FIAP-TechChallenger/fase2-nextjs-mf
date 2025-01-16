@@ -31,7 +31,7 @@ services:
       context: ../
       dockerfile: ./Docker/Dockerfile-HostApp
       args:
-        REMOTE_APP_HOST: localhost
+        REMOTE_APP_HOST: http://localhost:3002
     depends_on:
       db:
         condition: service_healthy
