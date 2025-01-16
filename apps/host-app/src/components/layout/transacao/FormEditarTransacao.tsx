@@ -12,6 +12,7 @@ import TransacaoAnexoDownload from "./TransacaoAnexoDownload";
 import InputLabel from "@/components/forms/InputLabel";
 import { Transacao } from "../../../shared/models/Transacao";
 import { TipoTransacao } from "@/shared/types/TipoTransacao";
+import { DepositoCategorias, TransferenciaCategorias } from "@/shared/types/CategoriasPorTipoTransacao";
 
 export default function FormEditarTransacao(options: FormEditarTransacaoProps) {
   const fileUploaderRef = useRef<FileUploaderRef>();
@@ -50,11 +51,9 @@ export default function FormEditarTransacao(options: FormEditarTransacaoProps) {
   };
 
   const confirmarTransacao = async () => {
-    const { tipoTransacao, valor, date, anexo } = formData;
-    const result = await atualizarTransacao(Number(options.transacao.id), tipoTransacao, valor, date, anexo);
-    console.log("result", result);
-
-    if (options.onConfirmClicked) options.onConfirmClicked();
+    const { tipoTransacao, valor, date, anexo, categoria } = formData;
+    const result = await atualizarTransacao(Number(options.transacao.id), tipoTransacao, valor, date, anexo, categoria);
+    if (result && options.onConfirmClicked) options.onConfirmClicked();
   };
 
   const isFormValid = () => {
@@ -83,6 +82,16 @@ export default function FormEditarTransacao(options: FormEditarTransacaoProps) {
           style="dark"
           value={formData.tipoTransacao}
           onValueChanged={(value) => handleChange("tipoTransacao", value)}
+        />
+        <InputSelect
+          name="categoria"
+          label="Categoria"
+          options={
+            formData.tipoTransacao === TipoTransacao.TRANSFERENCIA ? TransferenciaCategorias : DepositoCategorias
+          }
+          style="dark"
+          value={formData.categoria || ""}
+          onValueChanged={(value) => handleChange("categoria", value)}
         />
         <Input
           name="valor"

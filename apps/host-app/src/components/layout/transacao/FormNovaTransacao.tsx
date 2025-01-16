@@ -4,12 +4,14 @@ import InputSelect from "@/components/forms/InputSelect";
 import Input from "@/components/forms/Input";
 import Button from "@/components/ui/Button";
 import { TipoTransacao } from "@/shared/types/TipoTransacao";
+import { DepositoCategorias, TransferenciaCategorias } from "@/shared/types/CategoriasPorTipoTransacao";
 import { FormularioProps } from "@/shared/models/Formulario";
 import { InputSelectOption } from "@/shared/models/Input";
 import FileUploader, { FileUploaderRef } from "@/components/forms/FileUploader";
 
 type TransacaoForm = {
   tipoTransacao: TipoTransacao;
+  categoria: string;
   valor: number;
   date: string;
   anexo?: File;
@@ -19,6 +21,7 @@ export default function FormNovaTransacao({ deposito, transferencia, novaTransac
   const fileUploaderRef = useRef<FileUploaderRef>();
   const [formData, setFormData] = useState<TransacaoForm>({
     tipoTransacao: TipoTransacao.DEPOSITO,
+    categoria: "",
     valor: 0,
     date: new Date().toISOString(),
   });
@@ -49,9 +52,9 @@ export default function FormNovaTransacao({ deposito, transferencia, novaTransac
   };
 
   const processarTransacao = () => {
-    const { tipoTransacao, valor, date, anexo } = formData;
+    const { tipoTransacao, valor, date, anexo, categoria } = formData;
 
-    novaTransacao(tipoTransacao, valor, date, userId, anexo);
+    novaTransacao(tipoTransacao, valor, date, userId, anexo, categoria);
 
     if (tipoTransacao === TipoTransacao.DEPOSITO) {
       deposito(valor);
@@ -64,6 +67,7 @@ export default function FormNovaTransacao({ deposito, transferencia, novaTransac
   const resetForm = () => {
     setFormData({
       tipoTransacao: TipoTransacao.DEPOSITO,
+      categoria: "",
       valor: 0,
       date: new Date().toISOString(),
       anexo: undefined,
@@ -95,6 +99,14 @@ export default function FormNovaTransacao({ deposito, transferencia, novaTransac
         style="dark"
         value={formData.tipoTransacao}
         onValueChanged={(value) => handleChange("tipoTransacao", value)}
+      />
+      <InputSelect
+        name="categoria"
+        label="Categoria"
+        options={formData.tipoTransacao === TipoTransacao.TRANSFERENCIA ? TransferenciaCategorias : DepositoCategorias}
+        style="dark"
+        value={formData.categoria}
+        onValueChanged={(value) => handleChange("categoria", value)}
       />
       <Input
         name="valor"

@@ -8,7 +8,16 @@ export default class TransacoesRepository {
   async getTransacoesByUserId(userId: number) {
     return prisma.transacao.findMany({
       where: { contaId: userId },
-      select: { id: true, anexoName: true, contaId: true, date: true, tipoTransacao: true, valor: true, anexo: false },
+      select: {
+        id: true,
+        anexoName: true,
+        contaId: true,
+        date: true,
+        tipoTransacao: true,
+        valor: true,
+        anexo: false,
+        categoria: true,
+      },
     });
   }
 
@@ -24,7 +33,8 @@ export default class TransacoesRepository {
     valor: number,
     date: Date,
     anexo: Uint8Array<ArrayBufferLike> | null,
-    anexoName: string | null
+    anexoName: string | null,
+    categoria: string
   ) {
     const transacao = await this.getTransacoesById(transacaoId);
     if (!transacao) {
@@ -44,7 +54,7 @@ export default class TransacoesRepository {
       await this.saldoRepository.updateSaldo(transacao.contaId, newSaldo);
     }
 
-    const toUpdate: Partial<Transacao> = { tipoTransacao, valor, date };
+    const toUpdate: Partial<Transacao> = { tipoTransacao, valor, date, categoria };
 
     if (anexo) {
       toUpdate.anexo = anexo;
@@ -60,7 +70,8 @@ export default class TransacoesRepository {
     valor: number,
     date: Date,
     anexo: Uint8Array<ArrayBufferLike> | null,
-    anexoName: string | null
+    anexoName: string | null,
+    categoria: string
   ) {
     return prisma.transacao.create({
       data: {
@@ -70,6 +81,7 @@ export default class TransacoesRepository {
         date,
         anexo,
         anexoName,
+        categoria,
       },
     });
   }

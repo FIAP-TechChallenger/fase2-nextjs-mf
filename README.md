@@ -13,6 +13,14 @@ Banco de Dados Postgres
 
 ---
 
+### Comandos úteis
+
+- Criar migration
+
+```bash
+npx prisma migrate dev --name <migration_name> --schema=./libs/db/prisma/schema.prisma
+```
+
 ## Inicialização para apenas rodar o projeto
 
 ### 1. Iniciar Containers
@@ -69,13 +77,13 @@ cd libs/db
 Certifique-se de que as migrações e o cliente Prisma estejam configurados corretamente.
 
 ```bash
-npx prisma generate
+npx prisma generate --schema=./libs/db/prisma/schema.prisma
 ```
 
 #### 3.2 Aplicar as migrações no banco de dados:
 
 ```bash
-npx prisma migrate dev
+npx prisma migrate dev --schema=./libs/db/prisma/schema.prisma
 ```
 
 Se o banco de dados estiver configurado corretamente, as migrações serão aplicadas.
@@ -85,7 +93,7 @@ Se o banco de dados estiver configurado corretamente, as migrações serão apli
 Para abrir o Prisma Studio e visualizar os dados:
 
 ```bash
-npx prisma studio
+npx prisma studio --schema=./libs/db/prisma/schema.prisma
 ```
 
 ---

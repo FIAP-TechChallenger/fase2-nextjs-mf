@@ -22,6 +22,7 @@ model Conta {
 model Transacao{
   id Int @id @default(autoincrement())
   tipoTransacao String
+  categoria String?
   valor Float?
   date DateTime?
   contaId Int

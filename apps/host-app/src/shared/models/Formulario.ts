@@ -11,6 +11,13 @@ export interface FormEditarTransacaoProps {
 export interface FormularioProps {
   deposito: (valor: number) => void;
   transferencia: (valor: number) => void;
-  novaTransacao: (tipo: TipoTransacao, valor: number, date: string, userId: number, anexo?: File) => void;
+  novaTransacao: (
+    tipo: TipoTransacao,
+    valor: number,
+    date: string,
+    userId: number,
+    anexo?: File,
+    categoria?: string
+  ) => void;
   userId: number;
 }

@@ -91,14 +91,15 @@ export function TransacoesProvider({ children }: { children: ReactNode }) {
     valor: number,
     date: string,
     userId: number,
-    anexo?: File
+    anexo?: File,
+    categoria?: string
   ) => {
     if (tipoTransacao === TipoTransacao.TRANSFERENCIA && !verificaSaldo(valor)) {
       alert("Saldo insuficiente para realizar a transferência.");
       return;
     }
 
-    const transacao: Transacao = { userId, tipoTransacao, valor, date, anexo };
+    const transacao: Transacao = { userId, tipoTransacao, valor, date, anexo, categoria };
     const result = await postTransacao(transacao);
     if (result) await atualizaTransacoes();
   };
@@ -115,12 +116,13 @@ export function TransacoesProvider({ children }: { children: ReactNode }) {
     tipoTransacao: string,
     valor: number,
     date: string,
-    anexo?: File
+    anexo?: File,
+    categoria?: string
   ) => {
     try {
       if (!user?.id) throw new Error("Usuário não autenticado.");
 
-      const transacaoAtualizada = { transacaoId, tipoTransacao, valor, date, anexo };
+      const transacaoAtualizada = { transacaoId, tipoTransacao, valor, date, anexo, categoria };
       const result = await putTransacoes(transacaoAtualizada);
       if (result) {
         await atualizaTransacoes();

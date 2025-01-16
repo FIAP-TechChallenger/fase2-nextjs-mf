@@ -7,6 +7,7 @@ export interface Transacao {
   valor: number;
   date: string;
   anexo?: File;
+  categoria?: string;
 }
 
 interface transacaoAtualizada {
@@ -15,6 +16,7 @@ interface transacaoAtualizada {
   valor: number;
   date: string;
   anexo?: File;
+  categoria?: string;
 }
 
 export const getSaldo = async (userId: number) => {
@@ -69,6 +71,7 @@ export const postTransacao = async (transacao: Transacao) => {
   formData.append("valor", transacao.valor.toString());
   formData.append("date", transacao.date);
   formData.append("userId", transacao.userId.toString());
+  formData.append("categoria", transacao.categoria || "");
 
   const response = await fetch(`api/transacoes`, {
     method: "POST",
@@ -88,6 +91,7 @@ export const putTransacoes = async (transacao: transacaoAtualizada) => {
   formData.append("tipoTransacao", transacao.tipoTransacao);
   formData.append("valor", transacao.valor.toString());
   formData.append("date", transacao.date);
+  formData.append("categoria", transacao.categoria || "");
 
   const response = await fetch(`api/transacoes/${transacao.transacaoId}`, {
     method: "PUT",

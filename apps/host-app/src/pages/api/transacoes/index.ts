@@ -40,6 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       const tipoTransacao = fields.tipoTransacao?.[0];
+      const categoria = fields.categoria?.[0] as string;
       const valor = fields.valor?.[0] ? parseFloat(fields.valor[0]) : null;
       const date = fields.date?.[0] ? new Date(fields.date[0]) : null;
       const userId = fields.userId?.[0] ? parseInt(fields.userId[0]) : null;
@@ -67,7 +68,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         valor,
         date,
         anexoBytes,
-        file?.originalFilename || null
+        file?.originalFilename || null,
+        categoria
       );
 
       novaTransacao.anexo = null;

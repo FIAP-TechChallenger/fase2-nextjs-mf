@@ -5,6 +5,7 @@ export interface Transacao {
   id?: number;
   userId: number;
   tipoTransacao: TipoTransacao;
+  categoria?: string;
   valor: number;
   date: string;
   anexo?: File;
@@ -21,14 +22,16 @@ export interface TransacoesContextData {
     valor: number,
     date: string,
     userId: number,
-    anexo?: File
+    anexo?: File,
+    categoria?: string
   ) => Promise<void>;
   atualizarTransacao: (
     transacaoId: number,
     tipoTransacao: TipoTransacao,
     valor: number,
     date: string,
-    anexo?: File
+    anexo?: File,
+    categoria?: string
   ) => Promise<boolean>;
   deletarTransacao: (transacaoId: number) => Promise<void>;
   user: User;
@@ -43,6 +46,7 @@ export interface TransacaoModalConfirmDeleteProps {
   onClose: () => void;
   onConfirm: () => void;
   tipoTransacao: TipoTransacao;
+  categoria?: string;
   valor: number;
   date: string;
   isSubmitting?: boolean;
