@@ -1,9 +1,10 @@
+import { TipoTransacao } from "../types/TipoTransacao";
 import { User } from "./User";
 
 export interface Transacao {
   id?: number;
   userId: number;
-  tipoTransacao: string;
+  tipoTransacao: TipoTransacao;
   valor: number;
   date: string;
   anexo?: File;
@@ -15,10 +16,16 @@ export interface TransacoesContextData {
   saldo: number;
   deposito: (valor: number) => Promise<void>;
   transferencia: (valor: number) => Promise<void>;
-  novaTransacao: (tipoTransacao: string, valor: number, date: string, userId: number, anexo?: File) => Promise<void>;
+  novaTransacao: (
+    tipoTransacao: TipoTransacao,
+    valor: number,
+    date: string,
+    userId: number,
+    anexo?: File
+  ) => Promise<void>;
   atualizarTransacao: (
     transacaoId: number,
-    tipoTransacao: string,
+    tipoTransacao: TipoTransacao,
     valor: number,
     date: string,
     anexo?: File
@@ -35,7 +42,7 @@ export interface TransacaoModalConfirmDeleteProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
-  tipoTransacao: string;
+  tipoTransacao: TipoTransacao;
   valor: number;
   date: string;
   isSubmitting?: boolean;

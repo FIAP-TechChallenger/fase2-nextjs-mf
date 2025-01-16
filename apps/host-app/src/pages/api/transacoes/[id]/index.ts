@@ -1,4 +1,5 @@
 import TransacoesRepository from "@/repositories/TransacoesRepository";
+import { TipoTransacao } from "@/shared/types/TipoTransacao";
 import { createReadStream, ReadStream } from "fs";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -41,7 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           return res.status(500).end("Erro ao processar o arquivo."); // RETORNA
         }
 
-        const tipoTransacao = fields.tipoTransacao?.[0] as string;
+        const tipoTransacao = fields.tipoTransacao?.[0] as TipoTransacao;
         const valor = fields.valor?.[0] ? parseFloat(fields.valor[0]) : 0;
         const date = fields.date?.[0] ? new Date(fields.date[0]) : new Date();
         const file = Array.isArray(files?.anexo) ? files.anexo[0] : files?.anexo;
