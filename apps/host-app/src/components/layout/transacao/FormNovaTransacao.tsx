@@ -9,7 +9,7 @@ import { InputSelectOption } from "@/shared/models/Input";
 import FileUploader, { FileUploaderRef } from "@/components/forms/FileUploader";
 
 type TransacaoForm = {
-  tipoTransacao: string;
+  tipoTransacao: TipoTransacao;
   valor: number;
   date: string;
   anexo?: File;
@@ -18,15 +18,15 @@ type TransacaoForm = {
 export default function FormNovaTransacao({ deposito, transferencia, novaTransacao, userId }: FormularioProps) {
   const fileUploaderRef = useRef<FileUploaderRef>();
   const [formData, setFormData] = useState<TransacaoForm>({
-    tipoTransacao: "deposito",
+    tipoTransacao: TipoTransacao.DEPOSITO,
     valor: 0,
     date: new Date().toISOString(),
   });
 
   const tiposTransacao: InputSelectOption[] = [
     { value: "", label: "Selecione o Tipo" },
-    { value: "transferencia", label: "Transferência" },
-    { value: "deposito", label: "Depósito" },
+    { value: TipoTransacao.TRANSFERENCIA, label: "Transferência" },
+    { value: TipoTransacao.DEPOSITO, label: "Depósito" },
   ];
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -63,7 +63,7 @@ export default function FormNovaTransacao({ deposito, transferencia, novaTransac
   };
   const resetForm = () => {
     setFormData({
-      tipoTransacao: "deposito",
+      tipoTransacao: TipoTransacao.DEPOSITO,
       valor: 0,
       date: new Date().toISOString(),
       anexo: undefined,

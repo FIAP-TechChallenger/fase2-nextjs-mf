@@ -11,6 +11,7 @@ import {
 } from "../services/transacoesServices";
 import { useSession } from "next-auth/react";
 import { Transacao, TransacoesContextData } from "@/shared/models/Transacao";
+import { TipoTransacao } from "@/shared/types/TipoTransacao";
 
 const TransacoesContext = createContext<TransacoesContextData | undefined>(undefined);
 
@@ -85,8 +86,14 @@ export function TransacoesProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const novaTransacao = async (tipoTransacao: string, valor: number, date: string, userId: number, anexo?: File) => {
-    if (tipoTransacao === "transferencia" && !verificaSaldo(valor)) {
+  const novaTransacao = async (
+    tipoTransacao: TipoTransacao,
+    valor: number,
+    date: string,
+    userId: number,
+    anexo?: File
+  ) => {
+    if (tipoTransacao === TipoTransacao.TRANSFERENCIA && !verificaSaldo(valor)) {
       alert("Saldo insuficiente para realizar a transferência.");
       return;
     }

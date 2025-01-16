@@ -10,7 +10,8 @@ import { useRef, useState } from "react";
 import FileUploader, { FileUploaderRef } from "@/components/forms/FileUploader";
 import TransacaoAnexoDownload from "./TransacaoAnexoDownload";
 import InputLabel from "@/components/forms/InputLabel";
-import {Transacao }from '../../../shared/models/Transacao'
+import { Transacao } from "../../../shared/models/Transacao";
+import { TipoTransacao } from "@/shared/types/TipoTransacao";
 
 export default function FormEditarTransacao(options: FormEditarTransacaoProps) {
   const fileUploaderRef = useRef<FileUploaderRef>();
@@ -19,8 +20,8 @@ export default function FormEditarTransacao(options: FormEditarTransacaoProps) {
 
   const tiposTransacao: InputSelectOption[] = [
     { value: "", label: "Selecione o Tipo" },
-    { value: "transferencia", label: "Transferência" },
-    { value: "deposito", label: "Depósito" },
+    { value: TipoTransacao.TRANSFERENCIA, label: "Transferência" },
+    { value: TipoTransacao.DEPOSITO, label: "Depósito" },
   ];
 
   function onCancelClicked() {

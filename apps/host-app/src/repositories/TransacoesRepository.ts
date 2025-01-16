@@ -1,3 +1,4 @@
+import { TipoTransacao } from "@/shared/types/TipoTransacao";
 import { prisma, Transacao } from "@libs/db";
 import SaldoRepository from "./SaldoRepository";
 
@@ -19,7 +20,7 @@ export default class TransacoesRepository {
 
   async updateTransacao(
     transacaoId: number,
-    tipoTransacao: string,
+    tipoTransacao: TipoTransacao,
     valor: number,
     date: Date,
     anexo: Uint8Array<ArrayBufferLike> | null,
@@ -34,11 +35,11 @@ export default class TransacoesRepository {
 
     if (saldo != null) {
       let newSaldo =
-        transacao.tipoTransacao === "transferencia"
+        transacao.tipoTransacao === TipoTransacao.TRANSFERENCIA
           ? saldo.total + (transacao.valor ?? 0)
           : saldo.total - (transacao.valor ?? 0);
 
-      newSaldo = tipoTransacao === "transferencia" ? newSaldo - (valor ?? 0) : newSaldo + (valor ?? 0);
+      newSaldo = tipoTransacao === TipoTransacao.TRANSFERENCIA ? newSaldo - (valor ?? 0) : newSaldo + (valor ?? 0);
 
       await this.saldoRepository.updateSaldo(transacao.contaId, newSaldo);
     }
@@ -81,7 +82,7 @@ export default class TransacoesRepository {
 
       if (saldo != null) {
         const newSaldo =
-          transacao.tipoTransacao === "transferencia"
+          transacao.tipoTransacao === TipoTransacao.TRANSFERENCIA
             ? saldo.total + (transacao.valor ?? 0)
             : saldo.total - (transacao.valor ?? 0);
 
