@@ -1,23 +1,32 @@
 "use client";
 
-import React from "react";
-import { useFiltrosTransacoesContext } from "@/context/FiltroTransacoesContext";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "@/store/index";
+import {
+  setTipoFiltroTransacao,
+  setDataInicio,
+  setDataFim,
+  atualizarTransacoesFiltradas,
+} from "@/features/FilterTransactions/filterTransactions";
 import { TiposTransacao } from "@/shared/types/TipoTransacao";
 import Button from "@/components/ui/Button";
 import { ButtonColors } from "@/shared/types/Button";
 import Input from "@/components/forms/Input";
 import ListaTransacoes from "./ListaTransacoes";
 
-export default function TransacoesPage() {
-  const {
-    transacoesFiltradas,
-    tipoFiltroTransacao,
-    setTipoFiltroTransacao,
-    setDataInicio,
-    dataInicio,
-    dataFim,
-    setDataFim,
-  } = useFiltrosTransacoesContext();
+export default function TransacoesPage({userId }: any) {
+  
+  const dispatch: AppDispatch = useDispatch();
+  const { transacoesFiltradas, tipoFiltroTransacao, dataInicio, dataFim } = useSelector(
+    (state: RootState) => state.filterTransaction
+  );
+
+  const transacoes = useSelector((state: RootState) => state.filterTransaction.transacoesFiltradas);
+ 
+  const handleFiltrarTransacoes = () => {
+    dispatch( atualizarTransacoesFiltradas());
+  };
 
   function getFiltroTipoButtonColor(tipo: TiposTransacao): ButtonColors {
     return tipo === tipoFiltroTransacao ? "blue" : "gray";
@@ -36,17 +45,26 @@ export default function TransacoesPage() {
           <Button
             text="Todos"
             color={getFiltroTipoButtonColor("todos")}
-            onClick={() => setTipoFiltroTransacao("todos")}
+            onClick={() => {
+              dispatch(setTipoFiltroTransacao("todos"));
+              handleFiltrarTransacoes();
+            }}
           />
           <Button
             text="Depósitos"
             color={getFiltroTipoButtonColor("deposito")}
-            onClick={() => setTipoFiltroTransacao("deposito")}
+            onClick={() => {
+              dispatch(setTipoFiltroTransacao("deposito"));
+              handleFiltrarTransacoes();
+            }}
           />
           <Button
             text="Transferências"
             color={getFiltroTipoButtonColor("transferencia")}
-            onClick={() => setTipoFiltroTransacao("transferencia")}
+            onClick={() => {
+              dispatch(setTipoFiltroTransacao("transferencia"));
+              handleFiltrarTransacoes();
+            }}
           />
         </div>
 
@@ -57,7 +75,10 @@ export default function TransacoesPage() {
             label="Data início:"
             labelTextBold={false}
             name="dataInicio"
-            onValueChanged={(value) => setDataInicio(value as string)}
+            onValueChanged={(value) => {
+              dispatch(setDataInicio(value as string));
+              handleFiltrarTransacoes();
+            }}
           />
           <Input
             type="date"
@@ -65,12 +86,15 @@ export default function TransacoesPage() {
             label="Data fim:"
             labelTextBold={false}
             name="dataFim"
-            onValueChanged={(value) => setDataFim(value as string)}
+            onValueChanged={(value) => {
+              dispatch(setDataFim(value as string ));
+              handleFiltrarTransacoes();
+            }}
           />
         </div>
       </div>
 
-      <ListaTransacoes transacoes={transacoesFiltradas} showActions={true} />
+      <ListaTransacoes transacoes={transacoesFiltradas} showActions={true} userId = {userId}/>
     </div>
   );
 }

@@ -6,12 +6,30 @@ import Image from "next/image";
 import Icon from "@/components/ui/Icon";
 import { useSession } from "next-auth/react";
 import { useTransacoesContext } from "@/context/TransacoesContext";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "@/store";
+import { useEffect } from "react";
+import { atualizarSaldo, fetchDadosIniciais } from "@/features/transactions/transactionSlice";
 
 export default function Saldo() {
   const { data: session } = useSession();
-  const { saldo } = useTransacoesContext();
   const date: string = formatarData(new Date(), FormatoData.DIA_SEMANA_DIA_MES_ANO);
-  const saldoFormato = formatarMoeda(saldo || 0);
+  const dispatch = useDispatch<AppDispatch>();
+  const saldoRedux = useSelector((state: any) => state.transaction.saldo);
+  const saldoReduxFormato = formatarMoeda(saldoRedux || 0);
+
+  // useEffect(() => {
+  //   if (session?.user?.id) {
+  //     dispatch(fetchDadosIniciais(session.user.id));
+  //   }
+  // }, [session?.user?.id, dispatch]);
+
+
+  useEffect(() => {
+    if (session?.user?.id) {
+      dispatch(atualizarSaldo(session.user.id));
+    }
+  }, [saldoRedux]);
 
   return (
     <div className="flex relative max-sm:flex-col max-sm:items-center max-sm:h-[600px] sm:min-h-[400px] w-full text-white bg-fiap-navy-blue rounded-[8px]">
@@ -28,7 +46,7 @@ export default function Saldo() {
           <Icon name="visibility" className="pl-6" />
         </div>
         <span className="text-base pt-4">Conta Corrente</span>
-        <span className="text-3xl pt-1">{saldoFormato}</span>
+        <span className="text-3xl pt-1">{saldoReduxFormato}</span>
       </div>
 
       <Image

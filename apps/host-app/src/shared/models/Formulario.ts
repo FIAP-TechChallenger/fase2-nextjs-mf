@@ -21,3 +21,6 @@ export interface FormularioProps {
   ) => void;
   userId: number;
 }
+export interface FormularioPropsTransacao  {
+  userId: string | number;
+};

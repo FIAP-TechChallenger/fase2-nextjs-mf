@@ -1,17 +1,23 @@
 "use client";
 
 import React, { useState } from "react";
-import { useTransacoesContext } from "@/context/TransacoesContext";
-import { Transacao, ListaTransacoesOptions } from "../../../shared/models/Transacao";
+import { Transacao , ListaTransacoesOptions } from "../../../shared/models/Transacao";
 import TransacaoConfirmDelete from "./TransacaoConfirmDelete";
 import TransacaoItem from "./TransacaoItem";
 import TransacaoEditModal from "./TransacaoEditModal";
+import { AppDispatch } from "@/store";
+import { useDispatch } from "react-redux";
+import { deletarTransacao } from "@/features/transactions/transactionSlice";
+
 
 export default function ListaTransacoes(options: ListaTransacoesOptions) {
-  const { deletarTransacao } = useTransacoesContext();
+  
   const [confirmDeleteIsOpen, setConfirmDeleteIsOpen] = useState(false);
   const [editIsOpen, setEditIsOpen] = useState(false);
   const [transacaoSelecionada, setTransacaoSelecionada] = useState<Transacao | null>(null);
+  const dispatch: AppDispatch = useDispatch();
+
+  
 
   function handleDelete(transacao: Transacao) {
     setTransacaoSelecionada(transacao);
@@ -27,10 +33,16 @@ export default function ListaTransacoes(options: ListaTransacoesOptions) {
 
   function confirmarDelete() {
     if (transacaoSelecionada) {
-      deletarTransacao(Number(transacaoSelecionada.id));
+      dispatch(
+        deletarTransacao({
+          transacaoId: Number(transacaoSelecionada.id), 
+          userId: options.userId, 
+        })
+      );
       fecharModal();
     }
   }
+  
 
   function confirmarEdit() {
     if (transacaoSelecionada) {
@@ -69,7 +81,6 @@ export default function ListaTransacoes(options: ListaTransacoesOptions) {
             onClose={fecharModal}
             onConfirm={confirmarDelete}
             tipoTransacao={transacaoSelecionada.tipoTransacao}
-            categoria={transacaoSelecionada.categoria}
             valor={transacaoSelecionada.valor}
             date={transacaoSelecionada.date}
           />

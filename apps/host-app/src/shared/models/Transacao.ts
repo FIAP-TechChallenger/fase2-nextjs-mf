@@ -39,6 +39,7 @@ export interface TransacoesContextData {
 export interface ListaTransacoesOptions {
   transacoes: Transacao[];
   showActions: boolean;
+  userId : number;
 }
 
 export interface TransacaoModalConfirmDeleteProps {
@@ -69,4 +70,13 @@ export interface TransacaoAnexoDownloadOptions {
   item: Transacao;
   displayType: "onlyButton" | "anexoName";
   onRemoveAnexo?: { (): void };
+}
+export interface TransacaoForm  {
+  tipoTransacao: string;
+  valor: number;
+  date: string;
+  anexo?: File;
+};
+export interface CardNovaTransacaoProps {
+  userId: number
 }

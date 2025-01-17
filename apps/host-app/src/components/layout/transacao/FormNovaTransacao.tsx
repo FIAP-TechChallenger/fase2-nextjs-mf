@@ -5,9 +5,13 @@ import Input from "@/components/forms/Input";
 import Button from "@/components/ui/Button";
 import { TipoTransacao } from "@/shared/types/TipoTransacao";
 import { DepositoCategorias, TransferenciaCategorias } from "@/shared/types/CategoriasPorTipoTransacao";
-import { FormularioProps } from "@/shared/models/Formulario";
+import { FormularioProps, FormularioPropsTransacao } from "@/shared/models/Formulario";
 import { InputSelectOption } from "@/shared/models/Input";
 import FileUploader, { FileUploaderRef } from "@/components/forms/FileUploader";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store";
+import { useSelector } from "react-redux";
+import { novaTransacaoBanco, realizarDeposito } from "@/features/transactions/transactionSlice";
 
 type TransacaoForm = {
   tipoTransacao: TipoTransacao;
@@ -17,8 +21,9 @@ type TransacaoForm = {
   anexo?: File;
 };
 
-export default function FormNovaTransacao({ deposito, transferencia, novaTransacao, userId }: FormularioProps) {
+export default function FormNovaTransacao({ userId }: FormularioPropsTransacao) {
   const fileUploaderRef = useRef<FileUploaderRef>();
+  const dispatch = useDispatch<AppDispatch>();
   const [formData, setFormData] = useState<TransacaoForm>({
     tipoTransacao: TipoTransacao.DEPOSITO,
     categoria: "",
@@ -32,38 +37,87 @@ export default function FormNovaTransacao({ deposito, transferencia, novaTransac
     { value: TipoTransacao.DEPOSITO, label: "Depósito" },
   ];
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const saldoRedux = useSelector((state: any) => state.transaction.saldo);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!isFormValid()) {
-      alert("Dados inválidos! Verifique os campos.");
       return;
     }
 
-    processarTransacao();
-    resetForm();
+    try {
+      await processarTransacao();
+      resetForm();
+
+    } catch (error) {
+      console.error("Erro ao adicionar transação:", error);
+      alert("Erro ao adicionar transação. Tente novamente mais tarde.");
+    }
   };
 
-  const handleChange = (name: string, value: string | number) => {
+  const handleChange = (name: string, value: string | number | File | undefined) => {
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
+  const processarTransacao = async () => {
+    const { tipoTransacao, valor, date, anexo } = formData;
 
-  const processarTransacao = () => {
-    const { tipoTransacao, valor, date, anexo, categoria } = formData;
-
-    novaTransacao(tipoTransacao, valor, date, userId, anexo, categoria);
+    if (!userId) {
+      throw new Error("Usuário inválido!");
+    }
 
     if (tipoTransacao === TipoTransacao.DEPOSITO) {
-      deposito(valor);
-    } else if (tipoTransacao === TipoTransacao.TRANSFERENCIA) {
-      transferencia(valor);
-    } else {
+      await dispatch(
+        novaTransacaoBanco({
+          userId: Number(userId),
+          tipoTransacao,
+          valor,
+          date,
+          anexo,
+        })
+      ).unwrap();
+
+      const novoSaldo: number = saldoRedux + valor
+
+      await dispatch(
+        realizarDeposito({ userId: Number(userId), valor: novoSaldo })
+      );
+    }
+    else if (tipoTransacao === TipoTransacao.TRANSFERENCIA) {
+      if (verificaSaldo(valor)) {
+
+        await dispatch(
+          novaTransacaoBanco({
+            userId: Number(userId),
+            tipoTransacao,
+            valor,
+            date,
+            anexo,
+          })
+        ).unwrap();
+
+        const novoSaldo: number = saldoRedux - valor
+
+        await dispatch(realizarDeposito({ userId: Number(userId), valor: novoSaldo }))
+      }
+      else {
+        alert("Impossivel realizar essa transferencia seu saldo ficara negativo ")
+      }
+    }
+    else {
       throw new Error("Tipo de Transação é inválido!");
     }
   };
+
+  const verificaSaldo = (valor: number): boolean => {
+    if (valor > saldoRedux) {
+      return false;
+    }
+    return true;
+  };
+
   const resetForm = () => {
     setFormData({
       tipoTransacao: TipoTransacao.DEPOSITO,

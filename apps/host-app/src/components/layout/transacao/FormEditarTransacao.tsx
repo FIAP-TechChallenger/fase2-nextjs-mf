@@ -13,11 +13,20 @@ import InputLabel from "@/components/forms/InputLabel";
 import { Transacao } from "../../../shared/models/Transacao";
 import { TipoTransacao } from "@/shared/types/TipoTransacao";
 import { DepositoCategorias, TransferenciaCategorias } from "@/shared/types/CategoriasPorTipoTransacao";
+import { useSession } from "next-auth/react";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store";
+import { useSelector } from "react-redux";
+import { atualizarTransacaoBanco } from "@/features/transactions/transactionSlice";
 
 export default function FormEditarTransacao(options: FormEditarTransacaoProps) {
   const fileUploaderRef = useRef<FileUploaderRef>();
-  const { atualizarTransacao } = useTransacoesContext();
   const [formData, setFormData] = useState<Transacao>(options.transacao);
+  const { data: session } = useSession();
+  const user = session?.user;
+  const dispatch = useDispatch<AppDispatch>();
+
+  const saldoRedux = useSelector((state: any) => state.transaction.saldo);
 
   const tiposTransacao: InputSelectOption[] = [
     { value: "", label: "Selecione o Tipo" },
@@ -50,11 +59,61 @@ export default function FormEditarTransacao(options: FormEditarTransacaoProps) {
     }));
   };
 
+  function verificaTransacao(
+    saldo: number,
+    valor: number,
+    tipoTransacao: string,
+    valorOriginal: number
+  ): boolean {
+    const saldoAjustado = saldo + valorOriginal; 
+
+    if (tipoTransacao === TipoTransacao.TRANSFERENCIA && valor > saldoAjustado) {
+      return false;
+    }
+    if (tipoTransacao === TipoTransacao.DEPOSITO && valor <= 0) {
+      return false;
+    }
+
+    return true;
+  }
+
+
+  
   const confirmarTransacao = async () => {
-    const { tipoTransacao, valor, date, anexo, categoria } = formData;
-    const result = await atualizarTransacao(Number(options.transacao.id), tipoTransacao, valor, date, anexo, categoria);
-    if (result && options.onConfirmClicked) options.onConfirmClicked();
+    const { tipoTransacao, valor, date, anexo } = formData;
+
+    const valorOriginal = options.transacao.valor;
+
+    if (!verificaTransacao(saldoRedux, valor, tipoTransacao, valorOriginal)) {
+      alert("Impossível realizar essa atualização. Seu saldo ficaria negativo.");
+      return;
+    }
+
+    try {
+      const result = await dispatch(
+        atualizarTransacaoBanco({
+          transacaoId: Number(options.transacao.id),
+          tipoTransacao,
+          valor,
+          date,
+          anexo,
+          userId: user?.id || 0,
+        })
+      );
+
+      if (result.meta.requestStatus === "fulfilled") {
+        alert("Transação atualizada com sucesso!");
+      } else {
+        alert("Erro ao atualizar a transação.");
+      }
+    } catch (error) {
+      console.error("Erro ao confirmar transação:", error);
+      alert("Erro ao realizar a operação. Tente novamente.");
+    }
+
+    if (options.onConfirmClicked) options.onConfirmClicked();
   };
+
 
   const isFormValid = () => {
     const { tipoTransacao, valor, date } = formData;
