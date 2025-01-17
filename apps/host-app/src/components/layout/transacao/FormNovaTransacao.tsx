@@ -5,7 +5,7 @@ import Input from "@/components/forms/Input";
 import Button from "@/components/ui/Button";
 import { TipoTransacao } from "@/shared/types/TipoTransacao";
 import { DepositoCategorias, TransferenciaCategorias } from "@/shared/types/CategoriasPorTipoTransacao";
-import { FormularioProps, FormularioPropsTransacao } from "@/shared/models/Formulario";
+import {  FormularioPropsTransacao } from "@/shared/models/Formulario";
 import { InputSelectOption } from "@/shared/models/Input";
 import FileUploader, { FileUploaderRef } from "@/components/forms/FileUploader";
 import { useDispatch } from "react-redux";
@@ -13,7 +13,7 @@ import { AppDispatch } from "@/store";
 import { useSelector } from "react-redux";
 import { novaTransacaoBanco, realizarDeposito } from "@/features/transactions/transactionSlice";
 
-type TransacaoForm = {
+interface TransacaoForm  {
   tipoTransacao: TipoTransacao;
   categoria: string;
   valor: number;

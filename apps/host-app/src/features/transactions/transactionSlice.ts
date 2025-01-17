@@ -62,7 +62,7 @@ export const realizarDeposito = createAsyncThunk(
 
     await postSaldo(userId, valor); 
     const saldoAtualizado = await getSaldo(userId); 
-    dispatch(atualizarSaldoGlobal(saldoAtualizado)); // Atualiza no Redux imediatamente
+    dispatch(atualizarSaldoGlobal(saldoAtualizado)); 
   }
 );
 
@@ -75,7 +75,7 @@ export const realizarTransferencia = createAsyncThunk(
 
     await postSaldo(userId, valor); 
     const saldoAtualizado = await getSaldo(userId); 
-    dispatch(atualizarSaldoGlobal(saldoAtualizado)); // Atualiza no Redux imediatamente
+    dispatch(atualizarSaldoGlobal(saldoAtualizado)); 
   }
 );
 
@@ -133,16 +133,16 @@ const transactionSlice = createSlice({
   initialState,
   reducers: {
     atualizarSaldoLocal(state, action: PayloadAction<number>) {
-      state.saldo += action.payload; // Atualiza o saldo localmente
+      state.saldo += action.payload; 
     },
     atualizarSaldoGlobal(state, action: PayloadAction<number>) {
-      state.saldo = action.payload; // Atualiza com o saldo retornado do banco
+      state.saldo = action.payload; 
     },
     novaTransacao(state, action: PayloadAction<Transacao>) {
-      state.transacoes.push(action.payload); // Adiciona nova transação localmente
+      state.transacoes.push(action.payload); 
     },
   },
-  // extra reducres para atualizar localmente os dados 
+  
   extraReducers: (builder) => {
     builder
       .addCase(fetchDadosIniciais.fulfilled, (state, action) => {

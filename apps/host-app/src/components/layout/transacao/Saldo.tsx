@@ -5,7 +5,6 @@ import { FormatoData } from "@/shared/types/FormatoData";
 import Image from "next/image";
 import Icon from "@/components/ui/Icon";
 import { useSession } from "next-auth/react";
-import { useTransacoesContext } from "@/context/TransacoesContext";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store";
 import { useEffect } from "react";
@@ -17,12 +16,6 @@ export default function Saldo() {
   const dispatch = useDispatch<AppDispatch>();
   const saldoRedux = useSelector((state: any) => state.transaction.saldo);
   const saldoReduxFormato = formatarMoeda(saldoRedux || 0);
-
-  // useEffect(() => {
-  //   if (session?.user?.id) {
-  //     dispatch(fetchDadosIniciais(session.user.id));
-  //   }
-  // }, [session?.user?.id, dispatch]);
 
 
   useEffect(() => {

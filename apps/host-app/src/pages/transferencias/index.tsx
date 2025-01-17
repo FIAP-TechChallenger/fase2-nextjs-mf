@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
-export default function transferencias() {
+export default function Transferencias() {
   
   const { data: session } = useSession();
   const dispatch = useDispatch<AppDispatch>();
