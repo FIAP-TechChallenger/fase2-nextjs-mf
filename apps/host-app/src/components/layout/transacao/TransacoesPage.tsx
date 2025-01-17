@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/store/index";
 import {
@@ -42,6 +42,10 @@ export default function TransacoesPage({ userId }: userIdProps) {
   function getFiltroTipoButtonColor(tipo: TiposTransacao): ButtonColors {
     return tipo === tipoFiltroTransacao ? "blue" : "gray";
   }
+
+  useEffect(() => {
+    setPaginaAtual(1);
+  }, [tipoFiltroTransacao])
 
 
    const renderPaginationButtons = () => {
