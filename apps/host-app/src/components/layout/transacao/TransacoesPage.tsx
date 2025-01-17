@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/store/index";
 import {
@@ -15,17 +13,25 @@ import { ButtonColors } from "@/shared/types/Button";
 import Input from "@/components/forms/Input";
 import ListaTransacoes from "./ListaTransacoes";
 
-export default function TransacoesPage({userId }: any) {
-  
+const ITENS_POR_PAGINA = 5; 
+
+export default function TransacoesPage({ userId }: any) {
   const dispatch: AppDispatch = useDispatch();
   const { transacoesFiltradas, tipoFiltroTransacao, dataInicio, dataFim } = useSelector(
     (state: RootState) => state.filterTransaction
   );
 
-  const transacoes = useSelector((state: RootState) => state.filterTransaction.transacoesFiltradas);
- 
-  const handleFiltrarTransacoes = () => {
-    dispatch( atualizarTransacoesFiltradas());
+  const [paginaAtual, setPaginaAtual] = useState(1); 
+
+  const totalPaginas = Math.ceil(transacoesFiltradas.length / ITENS_POR_PAGINA);
+
+  const transacoesExibidas = transacoesFiltradas.slice(
+    (paginaAtual - 1) * ITENS_POR_PAGINA,
+    paginaAtual * ITENS_POR_PAGINA
+  );
+
+  const handlePaginaChange = (pagina: number) => {
+    setPaginaAtual(pagina);
   };
 
   function getFiltroTipoButtonColor(tipo: TiposTransacao): ButtonColors {
@@ -47,7 +53,7 @@ export default function TransacoesPage({userId }: any) {
             color={getFiltroTipoButtonColor("todos")}
             onClick={() => {
               dispatch(setTipoFiltroTransacao("todos"));
-              handleFiltrarTransacoes();
+              dispatch(atualizarTransacoesFiltradas());
             }}
           />
           <Button
@@ -55,7 +61,7 @@ export default function TransacoesPage({userId }: any) {
             color={getFiltroTipoButtonColor("deposito")}
             onClick={() => {
               dispatch(setTipoFiltroTransacao("deposito"));
-              handleFiltrarTransacoes();
+              dispatch(atualizarTransacoesFiltradas());
             }}
           />
           <Button
@@ -63,7 +69,7 @@ export default function TransacoesPage({userId }: any) {
             color={getFiltroTipoButtonColor("transferencia")}
             onClick={() => {
               dispatch(setTipoFiltroTransacao("transferencia"));
-              handleFiltrarTransacoes();
+              dispatch(atualizarTransacoesFiltradas());
             }}
           />
         </div>
@@ -77,7 +83,7 @@ export default function TransacoesPage({userId }: any) {
             name="dataInicio"
             onValueChanged={(value) => {
               dispatch(setDataInicio(value as string));
-              handleFiltrarTransacoes();
+              dispatch(atualizarTransacoesFiltradas());
             }}
           />
           <Input
@@ -87,14 +93,26 @@ export default function TransacoesPage({userId }: any) {
             labelTextBold={false}
             name="dataFim"
             onValueChanged={(value) => {
-              dispatch(setDataFim(value as string ));
-              handleFiltrarTransacoes();
+              dispatch(setDataFim(value as string));
+              dispatch(atualizarTransacoesFiltradas());
             }}
           />
         </div>
       </div>
 
-      <ListaTransacoes transacoes={transacoesFiltradas} showActions={true} userId = {userId}/>
+      <ListaTransacoes transacoes={transacoesExibidas} showActions={true} userId={userId} />
+
+      {/* Botões de Paginação */}
+      <div className="flex justify-center mt-4">
+        {Array.from({ length: totalPaginas }, (_, i) => i + 1).map((pagina) => (
+          <Button
+            key={pagina}
+            text={String(pagina)}
+            color={pagina === paginaAtual ? "blue" : "gray"}
+            onClick={() => handlePaginaChange(pagina)}
+          />
+        ))}
+      </div>
     </div>
   );
 }
