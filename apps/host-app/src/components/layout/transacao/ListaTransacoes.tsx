@@ -8,6 +8,7 @@ import TransacaoEditModal from "./TransacaoEditModal";
 import { AppDispatch } from "@/store";
 import { useDispatch } from "react-redux";
 import { deletarTransacao } from "@/features/transactions/transactionSlice";
+import { useSelector } from "react-redux";
 
 
 export default function ListaTransacoes(options: ListaTransacoesOptions) {
@@ -16,7 +17,8 @@ export default function ListaTransacoes(options: ListaTransacoesOptions) {
   const [editIsOpen, setEditIsOpen] = useState(false);
   const [transacaoSelecionada, setTransacaoSelecionada] = useState<Transacao | null>(null);
   const dispatch: AppDispatch = useDispatch();
-
+  const saldoRedux = useSelector((state: any) => state.transaction.saldo)
+  
   
 
   function handleDelete(transacao: Transacao) {
@@ -33,14 +35,27 @@ export default function ListaTransacoes(options: ListaTransacoesOptions) {
 
   function confirmarDelete() {
     if (transacaoSelecionada) {
+      if (
+        transacaoSelecionada.tipoTransacao === "deposito" &&
+        !deleteValid(transacaoSelecionada.valor)
+      ) {
+        alert("Não é possível excluir este depósito. Isso resultaria em saldo negativo.");
+        return;
+      }
+  
       dispatch(
         deletarTransacao({
-          transacaoId: Number(transacaoSelecionada.id), 
-          userId: options.userId, 
+          transacaoId: Number(transacaoSelecionada.id),
+          userId: options.userId,
         })
       );
       fecharModal();
     }
+  }
+  
+  function deleteValid(valor: number): boolean {
+    const novoSaldo = saldoRedux - valor;
+    return novoSaldo >= 0;
   }
   
 

@@ -3,9 +3,13 @@ import IconButton from "@/components/ui/IconButton";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 
-export default function Extrato() {
+interface userIdProps{
+  userId : number
+}
+
+export default function Extrato({userId}: userIdProps) {
   const router = useRouter();
-  const extratoRedux = useSelector((state: any) => state.filterTransaction.transacoesFiltradas)
+  const extratoRedux = useSelector((state: any) => state. transaction.transacoes)
 
 
   function onEditClicked() {
@@ -19,7 +23,7 @@ export default function Extrato() {
         <IconButton icon="edit" color="blue" onClick={onEditClicked} />
       </div>
 
-      <ListaTransacoes transacoes={extratoRedux?.slice(-5)?.reverse()} showActions={false}  />
+      <ListaTransacoes transacoes={extratoRedux?.slice(-5)?.reverse()} showActions={false} userId={userId}  />
     </div>
   );
 }

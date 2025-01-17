@@ -30,7 +30,7 @@ export default function Index() {
           <Saldo />
           <CardNovaTransacao userId={userId} />
         </div>
-        <Extrato />
+        <Extrato userId={userId}/>
       </div>
     </LayoutLogado>
   );

@@ -39,7 +39,7 @@ export interface TransacoesContextData {
 export interface ListaTransacoesOptions {
   transacoes: Transacao[];
   showActions: boolean;
-  userId : number;
+  userId: number;
 }
 
 export interface TransacaoModalConfirmDeleteProps {
