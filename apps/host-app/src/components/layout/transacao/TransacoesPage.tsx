@@ -43,6 +43,50 @@ export default function TransacoesPage({ userId }: userIdProps) {
     return tipo === tipoFiltroTransacao ? "blue" : "gray";
   }
 
+
+   const renderPaginationButtons = () => {
+    const maxVisibleButtons = 3; 
+    const buttons = [];
+
+    let startButton = Math.max(paginaAtual - Math.floor(maxVisibleButtons / 2), 1);
+    let endButton = Math.min(startButton + maxVisibleButtons - 1, totalPaginas);
+
+    if (endButton - startButton < maxVisibleButtons - 1) {
+      startButton = Math.max(endButton - maxVisibleButtons + 1, 1);
+    }
+
+    if (startButton > 1) {
+      buttons.push(
+        <Button key={1} text="1" color={1 === paginaAtual ? "blue" : "gray"} onClick={() => handlePaginaChange(1)} />
+      );
+      if (startButton > 2) {
+        buttons.push(<span key="ellipsis-start">...</span>);
+      }
+    }
+
+     for (let pagina = startButton; pagina <= endButton; pagina++) {
+      buttons.push(
+        <Button
+          key={pagina}
+          text={String(pagina)}
+          color={pagina === paginaAtual ? "blue" : "gray"}
+          onClick={() => handlePaginaChange(pagina)}
+        />
+      );
+    }
+
+    if (endButton < totalPaginas) {
+      if (endButton < totalPaginas - 1) {
+        buttons.push(<span key="ellipsis-end">...</span>);
+      }
+      buttons.push(
+        <Button key={totalPaginas} text={String(totalPaginas)} color={totalPaginas === paginaAtual ? "blue" : "gray"} onClick={() => handlePaginaChange(totalPaginas)} />
+      );
+    }
+
+    return buttons;
+  };
+
   return (
     <div className="bg-fiap-white shadow-md rounded-lg p-6 w-126">
       <div className="flex items-center justify-between mb-4">
@@ -107,15 +151,8 @@ export default function TransacoesPage({ userId }: userIdProps) {
 
       <ListaTransacoes transacoes={transacoesExibidas} showActions={true} userId={userId} />
 
-      <div className="flex justify-center mt-4">
-        {Array.from({ length: totalPaginas }, (_, i) => i + 1).map((pagina) => (
-          <Button
-            key={pagina}
-            text={String(pagina)}
-            color={pagina === paginaAtual ? "blue" : "gray"}
-            onClick={() => handlePaginaChange(pagina)}
-          />
-        ))}
+    <div className="flex justify-center mt-4">
+        {renderPaginationButtons()}
       </div>
     </div>
   );
