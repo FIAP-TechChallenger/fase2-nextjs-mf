@@ -53,7 +53,7 @@ export default function TransacoesPage({ userId }: userIdProps) {
     const buttons = [];
 
     let startButton = Math.max(paginaAtual - Math.floor(maxVisibleButtons / 2), 1);
-    let endButton = Math.min(startButton + maxVisibleButtons - 1, totalPaginas);
+    const endButton = Math.min(startButton + maxVisibleButtons - 1, totalPaginas);
 
     if (endButton - startButton < maxVisibleButtons - 1) {
       startButton = Math.max(endButton - maxVisibleButtons + 1, 1);

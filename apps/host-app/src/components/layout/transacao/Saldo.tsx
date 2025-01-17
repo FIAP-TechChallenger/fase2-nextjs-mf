@@ -8,7 +8,7 @@ import { useSession } from "next-auth/react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store";
 import { useEffect } from "react";
-import { atualizarSaldo, fetchDadosIniciais } from "@/features/transactions/transactionSlice";
+import { atualizarSaldo } from "@/features/transactions/transactionSlice";
 
 export default function Saldo() {
   const { data: session } = useSession();
@@ -17,12 +17,15 @@ export default function Saldo() {
   const saldoRedux = useSelector((state: any) => state.transaction.saldo);
   const saldoReduxFormato = formatarMoeda(saldoRedux || 0);
 
-
   useEffect(() => {
     if (session?.user?.id) {
       dispatch(atualizarSaldo(session.user.id));
     }
-  }, [saldoRedux]);
+  }, [dispatch, session?.user?.id]);useEffect(() => {
+  if (session?.user?.id) {
+    dispatch(atualizarSaldo(session.user.id));
+  }
+}, [dispatch, session?.user?.id]);
 
   return (
     <div className="flex relative max-sm:flex-col max-sm:items-center max-sm:h-[600px] sm:min-h-[400px] w-full text-white bg-fiap-navy-blue rounded-[8px]">

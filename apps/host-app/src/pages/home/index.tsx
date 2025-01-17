@@ -5,7 +5,7 @@ import CardNovaTransacao from "@/components/layout/transacao/CardNovaTransacao";
 import Extrato from "@/components/layout/transacao/Extrato";
 import Saldo from "@/components/layout/transacao/Saldo";
 import LayoutLogado from "@/components/layout/LayoutLogado";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { AppDispatch } from "@/store";
