@@ -50,6 +50,7 @@ const filtrosTransacoesSlice = createSlice({
     builder
       .addCase(fetchDadosIniciais.fulfilled, (state, action) => {
         state.todasTransacoes = action.payload.transacoes;
+        state. transacoesFiltradas = action.payload.transacoes;
       })
       .addCase(atualizarTransacoes.fulfilled, (state, action) => {
         state.todasTransacoes = action.payload.transacoes;

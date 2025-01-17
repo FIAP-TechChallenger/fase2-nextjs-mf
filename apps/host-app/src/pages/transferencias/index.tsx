@@ -14,10 +14,10 @@ export default function Transferencias() {
   const userId = Number(session?.user.id)
 
   useEffect(() => {
-    if (session?.user?.id) {
-      dispatch(fetchDadosIniciais(session.user.id));
+    if (userId) {
+      dispatch(fetchDadosIniciais(userId));
     }
-  }, [session?.user?.id, dispatch]);
+  }, [userId, dispatch]);
 
   return (
     <LayoutLogado>

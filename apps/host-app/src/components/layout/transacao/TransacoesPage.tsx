@@ -13,9 +13,14 @@ import { ButtonColors } from "@/shared/types/Button";
 import Input from "@/components/forms/Input";
 import ListaTransacoes from "./ListaTransacoes";
 
+interface userIdProps {
+  userId : number
+
+}
+
 const ITENS_POR_PAGINA = 5; 
 
-export default function TransacoesPage({ userId }: any) {
+export default function TransacoesPage({ userId }: userIdProps) {
   const dispatch: AppDispatch = useDispatch();
   const { transacoesFiltradas, tipoFiltroTransacao, dataInicio, dataFim } = useSelector(
     (state: RootState) => state.filterTransaction
@@ -102,7 +107,6 @@ export default function TransacoesPage({ userId }: any) {
 
       <ListaTransacoes transacoes={transacoesExibidas} showActions={true} userId={userId} />
 
-      {/* Botões de Paginação */}
       <div className="flex justify-center mt-4">
         {Array.from({ length: totalPaginas }, (_, i) => i + 1).map((pagina) => (
           <Button
